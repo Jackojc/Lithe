@@ -22,12 +22,12 @@ int main(int argc, const char* argv[]) {
     // Setup.
     lithe::order_types<position, colour, velocity>();
 
-    auto sizes       = get_sizes<position, colour, velocity>();
-    auto chunk_size  = get_total(sizes);
-    auto starting    = get_origins(sizes);
-    auto buff        = lithe::buffer(chunk_size, 1000000);
+    std::vector<size_t> sizes = get_sizes<position, colour, velocity>();
+    size_t              chunk_size = get_total(sizes);
+    std::vector<int>    starting = get_origins(sizes);
+    lithe::buffer       buff(chunk_size, 1000000);
 
-    lithe::allocator alloc(buff, sizes, starting);
+    lithe::allocator           alloc(buff, sizes, starting);
     lithe::component_container container(alloc);
 
     // Container manipulation.

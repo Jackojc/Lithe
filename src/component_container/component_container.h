@@ -20,7 +20,13 @@ namespace lithe {
 
         // Attaches a component to a specified entity.
         template <typename T>
-        T& insert(int entity, const T& item);
+        T& insert(int entity, const T& item) {
+            alive[
+                translate_index(alloc.entity_size, get_type_id<T>(), entity)
+            ] = true;
+
+            return alloc.insert(get_type_id<T>(), entity, item);
+        }
 
 
         // Removes a component from an entity.
@@ -35,7 +41,9 @@ namespace lithe {
 
         // Returns a reference to a component within an entity.
         template <typename T>
-        T& get(int entity);
+        T& get(int entity) {
+            return alloc.get<T>(get_type_id<T>(), entity);
+        }
     };
 }
 
