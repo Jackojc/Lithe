@@ -3,9 +3,10 @@ A minimal C++ engine that handles asset loading/management, state transition/man
 
 ## Prerequisites
 You will need the following programs installed in order to compile & run the project:
-> Note: These are the programs _I_ used so it's possible you may be able to proceed on different versions.
+> Note: These are the versions _I_ used so it's possible you may be able to proceed on different versions.
 - CMake >= 2.8
 - GCC >= 7.2.1
+- SDL >= 2.0
 
 ## Compilation
 In order to compile the project, perform the following steps:
