@@ -6,20 +6,20 @@
 
 
 namespace lithe {
-    // Calling this function will in turn call get_type_id().
+    // Calling this function will in turn call lithe::get_type_uid().
     // However, take note that it will call it in the same
     // order of the types in the variadic template.
     template <typename T>
-    void order_types() {
-        get_type_id<T>();
+    inline void order_types() {
+        lithe::get_type_uid<T>();
     }
 
 
     // This function calls itself recursively because
     // templates. >_>
     template <typename T, typename T2, typename... TArgs>
-    void order_types() {
-        get_type_id<T>();
+    inline void order_types() {
+        lithe::get_type_uid<T>();
         order_types<T2, TArgs...>();
     }
 }

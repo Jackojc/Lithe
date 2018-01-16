@@ -55,6 +55,12 @@ namespace lithe {
         }
 
 
+        template <typename T>
+        void remove(int x, int y) {
+            get<T>(x, y).~T();
+        }
+
+
         // Value initialises a region of the buffer.
         template <typename T>
         void zero(int x, int y) {

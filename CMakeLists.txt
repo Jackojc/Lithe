@@ -22,6 +22,21 @@ file(GLOB_RECURSE COMPONENT_CONTAINER
 )
 
 
+file(GLOB_RECURSE ENTITY
+    "src/entity/*.cpp"
+)
+
+
+file(GLOB_RECURSE SCENE_MANAGER
+    "src/scene_manager/*.cpp"
+)
+
+
+file(GLOB_RECURSE SCENE
+    "src/scene/*.cpp"
+)
+
+
 file(GLOB_RECURSE MISC
     "src/*.cpp"
     "src/*.h"
@@ -29,13 +44,16 @@ file(GLOB_RECURSE MISC
 
 
 # EXECUTABLE
-add_executable(${PROJECT_NAME} ${BUFFER} ${ALLOCATOR} ${COMPONENT_CONTAINER} ${MISC} ${MAIN})
+add_executable(${PROJECT_NAME} ${BUFFER} ${ALLOCATOR} ${COMPONENT_CONTAINER} ${ENTITY} ${SCENE_MANAGER} ${SCENE} ${MISC} ${MAIN})
 
 
 # FILTERS
 source_group("buffer" FILES ${BUFFER})
 source_group("allocator" FILES ${ALLOCATOR})
 source_group("component_container" FILES ${COMPONENT_CONTAINER})
+source_group("entity" FILES ${ENTITY})
+source_group("scene_manager" FILES ${SCENE_MANAGER})
+source_group("scene" FILES ${SCENE})
 source_group("misc" FILES ${MISC})
 
 

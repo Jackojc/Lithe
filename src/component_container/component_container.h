@@ -22,27 +22,42 @@ namespace lithe {
         template <typename T>
         T& insert(int entity, const T& item) {
             alive[
-                translate_index(alloc.entity_size, get_type_id<T>(), entity)
+                translate_index(
+                    alloc.entity_size,
+                    lithe::get_type_uid<T>(),
+                    entity
+                )
             ] = true;
 
-            return alloc.insert(get_type_id<T>(), entity, item);
+            return alloc.insert(lithe::get_type_uid<T>(), entity, item);
         }
 
 
         // Removes a component from an entity.
         template <typename T>
-        void remove(int entity, const T& item);
+        void remove(int entity) {
+            alloc.remove<T>(lithe::get_type_uid<T>(), entity);
+            alloc.zero(lithe::get_type_uid<T>(), entity);
+
+            alive[
+                translate_index(alloc.entity_size, lithe::get_type_uid<T>(), entity)
+            ] = false;
+        }
 
 
         // Checks if an entity has a component.
         template <typename T>
-        bool has(int entity);
+        bool has(int entity) {
+            return alive[
+                translate_index(alloc.entity_size, lithe::get_type_uid<T>(), entity)
+            ];
+        }
 
 
         // Returns a reference to a component within an entity.
         template <typename T>
         T& get(int entity) {
-            return alloc.get<T>(get_type_id<T>(), entity);
+            return alloc.get<T>(lithe::get_type_uid<T>(), entity);
         }
     };
 }
