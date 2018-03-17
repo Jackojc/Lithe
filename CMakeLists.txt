@@ -62,7 +62,14 @@ source_group("misc" FILES ${MISC})
 
 
 # GCC
+if(CMAKE_COMPILER_IS_GNUCXX)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Ofast -flto -m64")
+endif(CMAKE_COMPILER_IS_GNUCXX)
+
+#MSVC
+if(MSVC)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /Ox /GL")
+endif(MSVC)
 
 
 # PROPERTIES
