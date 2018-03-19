@@ -6,7 +6,6 @@
 #include <cstddef>
 #include <new>
 #include <algorithm>
-#include "../utils.h"
 #include "../translate_index.h"
 #include "../buffer/buffer.h"
 
@@ -26,7 +25,7 @@ namespace lithe {
         // access variables that have since gone out of
         // scope.
         allocator(
-            const buffer& buff,
+            const lithe::buffer& buff,
             const std::vector<size_t>& sizes_,
             const std::vector<int>& starting_
         );
@@ -35,7 +34,7 @@ namespace lithe {
         // Insert an object to a buffer.
         template <typename T>
         T& insert(int x, int y, const T& item) {
-            int i = translate_index(buff.chunk_size, x, y);
+            int i = lithe::translate_index(buff.chunk_size, x, y);
 
             return *(new (buff.buff + (i + sizes[x])) T{item});
         }
@@ -47,7 +46,7 @@ namespace lithe {
         // e.g: auto& (ref) or auto (val).
         template <typename T>
         T& get(int x, int y) {
-            int i = translate_index(buff.chunk_size, x, y);
+            int i = lithe::translate_index(buff.chunk_size, x, y);
 
             return *static_cast<T*>(
                 static_cast<void*>(buff.buff + (i + sizes[x]))
@@ -64,7 +63,7 @@ namespace lithe {
         // Value initialises a region of the buffer.
         template <typename T>
         void zero(int x, int y) {
-            std::fill_n(buff, sizeof(T), 0);
+            std::fill_n(buff.buff, sizeof(T), 0);
         }
     };
 }
