@@ -60,6 +60,12 @@ namespace lithe {
         }
 
 
+        template <typename T>
+        void swap(int x1, int y1, int x2, int y2) {
+            std::swap(get<T>(x1, y1), get<T>(x2, y2));
+        }
+
+
         // Value initialises a region of the buffer.
         template <typename T>
         void zero(int x, int y) {

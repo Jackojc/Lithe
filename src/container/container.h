@@ -3,6 +3,7 @@
 
 
 #include <vector>
+#include "../types.h"
 #include "../uid.h"
 #include "../translate_index.h"
 #include "../allocator/allocator.h"
@@ -24,6 +25,13 @@ namespace lithe {
         }
 
 
+        // Returns a reference to a component within an entity.
+        template <typename T>
+        T& get(int entity) {
+            return alloc.get<T>(lithe::get_type_uid<T>(), entity);
+        }
+
+
         // Removes a component from an entity.
         template <typename T>
         void remove(int entity) {
@@ -32,10 +40,10 @@ namespace lithe {
         }
 
 
-        // Returns a reference to a component within an entity.
         template <typename T>
-        T& get(int entity) {
-            return alloc.get<T>(lithe::get_type_uid<T>(), entity);
+        void swap(int a, int b) {
+            lithe::component_id tmp = lithe::get_type_uid<T>();
+            alloc.swap<T>(tmp, a, tmp, b);
         }
     };
 }

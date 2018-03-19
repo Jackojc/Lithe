@@ -14,6 +14,10 @@
 // COMPONENTS
 struct position {
     float x, y;
+
+    void print() {
+        std::cout << x << ": " << y << std::endl;
+    }
 };
 
 
@@ -78,15 +82,20 @@ int main(int argc, const char* argv[]) {
     auto alloc     = lithe::setup_allocator(info, buff);
     auto container = lithe::setup_container(alloc);
 
-    lithe::entity ent(0, container);
+    lithe::entity ent1(0, container);
+    lithe::entity ent2(1, container);
 
-    ent.insert(position{3, 5});
+    ent1.insert(position{33, 33});
+    ent2.insert(position{55, 55});
 
-    std::cout << ent.has<position>() << std::endl;
+    ent1.get<position>().print();
+    ent2.get<position>().print();
 
-    ent.remove<position>();
+    container.swap<position>(0, 1);
 
-    std::cout << ent.has<position>() << std::endl;
+    ent1.get<position>().print();
+    ent2.get<position>().print();
+
 
     return 0;
 }
