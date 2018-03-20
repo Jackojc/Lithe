@@ -1,7 +1,3 @@
-#ifndef LITHE_SCENE_MANAGER_CPP
-#define LITHE_SCENE_MANAGER_CPP
-
-
 #include "scene_manager.h"
 
 
@@ -39,6 +35,3 @@ namespace lithe {
             current().update_all();
     }
 }
-
-
-#endif

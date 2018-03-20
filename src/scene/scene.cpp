@@ -1,7 +1,3 @@
-#ifndef LITHE_SCENE_CPP
-#define LITHE_SCENE_CPP
-
-
 #include "scene.h"
 
 
@@ -32,6 +28,3 @@ namespace lithe {
         internal_draw();
     }
 }
-
-
-#endif

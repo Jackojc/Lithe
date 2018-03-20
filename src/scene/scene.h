@@ -9,7 +9,7 @@ namespace lithe {
         virtual ~scene() {}
 
         virtual void event() {}
-        virtual void update() = 0;
+        virtual void update() {}
         virtual void draw() {}
 
         virtual void pause() {}

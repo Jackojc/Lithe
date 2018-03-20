@@ -12,10 +12,10 @@ namespace lithe {
     struct buffer {
         char* buff;
         size_t chunk_size;
-        int num_entities;
+        unsigned num_entities;
 
 
-        buffer(size_t chunk_size_, int num_entities_);
+        buffer(size_t chunk_size_, unsigned num_entities_);
 
 
         ~buffer();

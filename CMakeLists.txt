@@ -17,8 +17,8 @@ file(GLOB_RECURSE ALLOCATOR
 )
 
 
-file(GLOB_RECURSE COMPONENT_CONTAINER
-    "src/component_container/*.cpp"
+file(GLOB_RECURSE CONTAINER
+    "src/container/*.cpp"
 )
 
 
@@ -37,6 +37,16 @@ file(GLOB_RECURSE SCENE
 )
 
 
+file(GLOB_RECURSE UID_MANAGER
+    "src/uid_manager/*.cpp"
+)
+
+
+file(GLOB_RECURSE INFO
+    "src/info/*.cpp"
+)
+
+
 file(GLOB_RECURSE MISC
     "src/*.cpp"
     "src/*.h"
@@ -44,16 +54,18 @@ file(GLOB_RECURSE MISC
 
 
 # EXECUTABLE
-add_executable(${PROJECT_NAME} ${BUFFER} ${ALLOCATOR} ${COMPONENT_CONTAINER} ${ENTITY} ${SCENE_MANAGER} ${SCENE} ${MISC} ${MAIN})
+add_executable(${PROJECT_NAME} ${BUFFER} ${ALLOCATOR} ${CONTAINER} ${ENTITY} ${SCENE_MANAGER} ${SCENE} ${UID_MANAGER} ${INFO} ${MISC} ${MAIN})
 
 
 # FILTERS
 source_group("buffer" FILES ${BUFFER})
 source_group("allocator" FILES ${ALLOCATOR})
-source_group("component_container" FILES ${COMPONENT_CONTAINER})
+source_group("container" FILES ${CONTAINER})
 source_group("entity" FILES ${ENTITY})
 source_group("scene_manager" FILES ${SCENE_MANAGER})
 source_group("scene" FILES ${SCENE})
+source_group("uid_manager" FILES ${UID_MANAGER})
+source_group("info" FILES ${INFO})
 source_group("misc" FILES ${MISC})
 
 
@@ -62,7 +74,7 @@ source_group("misc" FILES ${MISC})
 
 
 # GCC
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Ofast -flto -m64")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wfatal-errors -Wshadow -Wpadded -Wunreachable-code -Ofast -flto -m64")
 
 
 # PROPERTIES

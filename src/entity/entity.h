@@ -2,8 +2,10 @@
 #define LITHE_ENTITY_H
 
 
-#include <cstdint>
-#include "../component_container/component_container.h"
+#include <cmath>
+#include <bitset>
+#include "../types.h"
+#include "../container/container.h"
 
 
 namespace lithe {
@@ -11,16 +13,18 @@ namespace lithe {
     // an ID and implements wrapper functions that call
     // to the container object.
     struct entity {
-        uintmax_t uid;
-        lithe::component_container& container;
+        lithe::component_id uid;
+        lithe::container& container;
+        std::bitset<64> component_mask;
 
 
-        entity(uintmax_t uid_, lithe::component_container& container_);
+        entity(lithe::component_id uid_, lithe::container& container_);
 
 
         // Insert a component.
         template <typename T>
         T& insert(const T& item) {
+            component_mask[lithe::get_type_uid<T>()] = 1;
             return container.insert<T>(uid, item);
         }
 
@@ -29,13 +33,14 @@ namespace lithe {
         template <typename T>
         void remove() {
             container.remove<T>(uid);
+            component_mask[lithe::get_type_uid<T>()] = 0;
         }
 
 
         // Check if this entity has a certain component.
         template <typename T>
         bool has() {
-            return container.has<T>(uid);
+            return component_mask[lithe::get_type_uid<T>()];
         }
 
 
