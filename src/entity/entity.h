@@ -13,12 +13,12 @@ namespace lithe {
     // an ID and implements wrapper functions that call
     // to the container object.
     struct entity {
-        lithe::component_id uid;
+        lithe::entity_id uid;
         lithe::container& container;
         std::bitset<64> component_mask;
 
 
-        entity(lithe::component_id uid_, lithe::container& container_);
+        entity(lithe::entity_id uid_, lithe::container& container_);
 
 
         // Insert a component.

@@ -7,6 +7,7 @@
 
 namespace lithe {
     using component_id = uintmax_t;
+    using entity_id = uintmax_t;
 }
 
 
