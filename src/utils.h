@@ -24,11 +24,11 @@ namespace lithe {
 
     // Gets the starting position of each
     // type in the template.
-    inline std::vector<int> get_origins(const std::vector<size_t>& sizes) {
-        std::vector<int> start(sizes.size());
+    inline std::vector<size_t> get_origins(const std::vector<size_t>& sizes) {
+        std::vector<size_t> start(sizes.size());
 
         for (size_t i = 0; i < sizes.size(); ++i)
-            start[i] = std::accumulate(sizes.begin(), sizes.begin() + i, 0);
+            start[i] = std::accumulate(sizes.begin(), sizes.begin() + i, size_t{0});
 
         return start;
     }
@@ -36,7 +36,7 @@ namespace lithe {
 
     // Get the size (in bytes) of a collection of components.
     inline size_t get_total(const std::vector<size_t>& sizes) {
-        return std::accumulate(sizes.begin(), sizes.end(), 0);
+        return std::accumulate(sizes.begin(), sizes.end(), size_t{0});
     }
 
 

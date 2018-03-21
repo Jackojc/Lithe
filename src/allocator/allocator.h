@@ -17,7 +17,7 @@ namespace lithe {
         const buffer& buff;
         const std::vector<size_t>& sizes;
         size_t entity_size;
-        const std::vector<int>& starting;
+        const std::vector<size_t>& starting;
 
 
         // These arrays must be passed by value or else
@@ -27,7 +27,7 @@ namespace lithe {
         allocator(
             const lithe::buffer& buff,
             const std::vector<size_t>& sizes_,
-            const std::vector<int>& starting_
+            const std::vector<size_t>& starting_
         );
 
 
