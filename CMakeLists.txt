@@ -74,10 +74,15 @@ source_group("misc" FILES ${MISC})
 
 
 # GCC
-# -Wpadded warns if structs are being padded for alignment.
-set(WARNINGS_AND_ERRORS "-Wall -Wextra -Wfatal-errors -Wshadow -Wunreachable-code -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wold-style-cast -Wuseless-cast -Wdouble-promotion -Wformat=2")
+if(CMAKE_COMPILER_IS_GNUCXX)
+    set(WARNINGS_AND_ERRORS "-Wall -Wextra -Wfatal-errors -Wshadow -Wunreachable-code -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wold-style-cast -Wuseless-cast -Wdouble-promotion -Wformat=2")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WARNINGS_AND_ERRORS} -Ofast -flto -m64")
+endif(CMAKE_COMPILER_IS_GNUCXX)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WARNINGS_AND_ERRORS} -Ofast -flto -m64")
+#MSVC
+if(MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /Ox /GL")
+endif(MSVC)
 
 
 # PROPERTIES
