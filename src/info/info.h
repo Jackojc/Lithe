@@ -9,7 +9,7 @@
 namespace lithe {
     struct info {
         std::vector<size_t> sizes;
-        std::vector<int> origins;
+        std::vector<size_t> origins;
         size_t chunk_size;
 
 
