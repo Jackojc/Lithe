@@ -35,7 +35,7 @@ namespace lithe {
         void remove();
 
 
-        lithe::scene& current();
+        lithe::scene& current() const;
 
 
         void update();

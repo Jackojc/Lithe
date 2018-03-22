@@ -2,25 +2,30 @@
 #define LITHE_UID_MANAGER_H
 
 
+#include <cstddef>
 #include <vector>
 #include "../stack/stack.h"
 #include "../types.h"
 
 
 namespace lithe {
-    struct uid_manager {
-        lithe::component_id current;
-        lithe::stack<lithe::component_id, 1024> unused;
+    template <size_t S>
+    struct uid_manager_base {
+        lithe::entity_id current;
+        lithe::stack<lithe::entity_id, S> unused;
         bool any_unused;
 
 
-        lithe::component_id withdraw();
-        void deposit(lithe::component_id uid);
+        lithe::entity_id withdraw();
+        void deposit(lithe::entity_id uid);
 
 
-        std::vector<lithe::component_id> withdraw(unsigned num);
-        void deposit(std::vector<lithe::component_id>&& uids);
+        std::vector<lithe::entity_id> withdraw(unsigned num);
+        void deposit(std::vector<lithe::entity_id>&& uids);
     };
+
+
+    using uid_manager = uid_manager_base<2014>;
 }
 
 

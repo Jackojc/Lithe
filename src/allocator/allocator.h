@@ -8,16 +8,16 @@
 #include <algorithm>
 #include <numeric>
 #include "../translate_index.h"
-#include "../buffer/buffer.h"
+#include "../types.h"
 
 
 namespace lithe {
     // Allocates and manipulates a
     // buffer of objects.
     struct allocator {
-        const lithe::buffer& buff;
-        const std::vector<size_t>& sizes;
-        const std::vector<size_t>& starting;
+        lithe::buffer buff;
+        std::vector<size_t>* sizes;
+        std::vector<size_t>* starting;
         size_t entity_size;
 
 
@@ -26,18 +26,19 @@ namespace lithe {
         // access variables that have since gone out of
         // scope.
         allocator(
-            const lithe::buffer& buff,
-            const std::vector<size_t>& sizes_,
-            const std::vector<size_t>& starting_
+            lithe::buffer buff_,
+            std::vector<size_t>* sizes_,
+            std::vector<size_t>* starting_,
+            size_t entity_size_
         );
 
 
         // Insert an object to a buffer.
         template <typename T>
         T& insert(lithe::component_id x, lithe::entity_id y, const T& item) {
-            size_t i = lithe::translate_index(buff.chunk_size, x, y);
+            size_t i = lithe::translate_index(entity_size, x, y);
 
-            return *(new (buff.buff + (i + starting[x])) T{item});
+            return *(new (buff + (i + starting->at(x))) T{item});
         }
 
 
@@ -46,11 +47,11 @@ namespace lithe {
         // - both by val and by ref.
         // e.g: auto& (ref) or auto (val).
         template <typename T>
-        T& get(lithe::component_id x, lithe::entity_id y) {
-            size_t i = lithe::translate_index(buff.chunk_size, x, y);
+        T& get(lithe::component_id x, lithe::entity_id y) const {
+            size_t i = lithe::translate_index(entity_size, x, y);
 
             return *static_cast<T*>(
-                static_cast<void*>(buff.buff + (i + starting[x]))
+                static_cast<void*>(buff + (i + starting->at(x)))
             );
         }
 
@@ -65,7 +66,7 @@ namespace lithe {
         template <typename T>
         void zero(lithe::component_id x, lithe::entity_id y) {
             std::fill_n(
-                buff.buff + (i + starting[x]),  // Find start of component.
+                buff + (i + starting->at(x),)  // Find start of component.
                 sizeof(T),
                 0
             );

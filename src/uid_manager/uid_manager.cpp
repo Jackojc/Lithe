@@ -2,7 +2,7 @@
 
 
 namespace lithe {
-    lithe::component_id uid_manager::withdraw() {
+    lithe::entity_id uid_manager::withdraw() {
         if (any_unused) {
             if (unused.size() == 1)
                 any_unused = false;
@@ -12,7 +12,7 @@ namespace lithe {
         return current++;
     }
 
-    void uid_manager::deposit(lithe::component_id uid) {
+    void uid_manager::deposit(lithe::entity_id uid) {
         if (uid - 1 == current) {
             current--;
             return;
@@ -23,8 +23,8 @@ namespace lithe {
     }
 
 
-    std::vector<lithe::component_id> uid_manager::withdraw(unsigned num) {
-        std::vector<lithe::component_id> uids;
+    std::vector<lithe::entity_id> uid_manager::withdraw(unsigned num) {
+        std::vector<lithe::entity_id> uids;
 
         for (unsigned i = 0; i < num; ++i) {
             uids.push_back(withdraw());
@@ -33,7 +33,7 @@ namespace lithe {
         return uids;
     }
 
-    void uid_manager::deposit(std::vector<lithe::component_id>&& uids) {
+    void uid_manager::deposit(std::vector<lithe::entity_id>&& uids) {
         for (auto uid: uids) {
             deposit(uid);
         }

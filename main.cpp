@@ -5,7 +5,6 @@
 #include "src/utils.h"
 #include "src/uid.h"
 #include "src/order.h"
-#include "src/buffer/buffer.h"
 #include "src/allocator/allocator.h"
 #include "src/container/container.h"
 #include "src/entity/entity.h"
@@ -80,48 +79,35 @@ void update_position(lithe::entity& self, float x, float y) {
 
 
 
-constexpr unsigned ENTITIES = 10;
+constexpr unsigned ENTITIES = 100000000;
 
 
 
 
 
 int main(int argc, const char* argv[]) {
-    auto info      = lithe::get_info<position, name>();
-    auto buff      = lithe::setup_buffer(info, ENTITIES);
-    auto alloc     = lithe::setup_allocator(info, buff);
-    auto container = lithe::setup_container(alloc);
+    auto info       = lithe::setup_info<position, name>(ENTITIES);
+    auto &container = info.get_container();
 
 
-    lithe::entity a(0, container);
-    lithe::entity b(1, container);
+	if (info.buffer == nullptr) {
+		std::cerr << "Could not allocate enough memory to process!\n";
+		return -1;
+	}
 
 
-    a.insert(position{3, 3});
-    a.insert(name{"A"});
+    for (lithe::entity_id i = 0; i < ENTITIES; ++i) {
+        float tmp = static_cast<float>(i);
+        container.insert(i, position{ tmp, tmp });
+    }
 
 
-    b.insert(position{77, 77});
-    b.insert(name{"B"});
+    /*for (lithe::entity_id i = 0; i < ENTITIES; ++i) {
+        position& p = container.get<position>(i);
 
-
-    a.get<position>().print();
-    a.get<name>().print();
-    b.get<position>().print();
-    b.get<name>().print();
-
-
-    std::cout << "SWAP\n";
-    a.swap(b.uid);
-
-
-    a.get<position>().print();
-    a.get<name>().print();
-    b.get<position>().print();
-    b.get<name>().print();
-
-
-
+        p.x += 0.1f;
+        p.y += 0.1f;
+    }*/
 
 
     return 0;

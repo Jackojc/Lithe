@@ -6,7 +6,8 @@
 #include <numeric>
 #include <cstddef>
 #include "order.h"
-#include "buffer/buffer.h"
+#include "types.h"
+#include "memory.h"
 #include "allocator/allocator.h"
 #include "container/container.h"
 #include "info/info.h"
@@ -40,35 +41,30 @@ namespace lithe {
     }
 
 
+    // Set everything that we need up properly.
     template <typename... TArgs>
-    inline lithe::info get_info() {
+    inline lithe::info setup_info(
+        lithe::entity_id num_entities,
+
+        lithe::handler_create handle_c = &lithe::create_buffer,
+        lithe::handler_destroy handle_d = &lithe::destroy_buffer
+    ) {
         lithe::info x;
 
+        // Information about the components.
         x.sizes = lithe::get_sizes<TArgs...>();
         x.origins = lithe::get_origins(x.sizes);
-        x.chunk_size = lithe::get_total(x.sizes);
+        x.entity_size = lithe::get_total(x.sizes);
+        x.num_entities = num_entities;
+
+        // Objects to facilitate the manipulation of components.
+        x.buffer = handle_c(x.entity_size, x.num_entities);
+        x.handler_destroy = handle_d;
+
+        x.allocator = lithe::allocator(x.buffer, &x.sizes, &x.origins, x.entity_size);
+        x.container = lithe::container(&x.allocator);
 
         return x;
-    }
-
-
-    inline lithe::buffer setup_buffer(const lithe::info& x, unsigned num) {
-        return {x.chunk_size, num};
-    }
-
-
-    inline lithe::allocator setup_allocator(
-        const lithe::info& x,
-        const lithe::buffer& buff
-    ) {
-        return {buff, x.sizes, x.origins};
-    }
-
-
-    inline lithe::container setup_container(
-        lithe::allocator& alloc
-    ) {
-        return {alloc};
     }
 }
 
