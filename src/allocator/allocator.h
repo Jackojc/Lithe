@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <new>
 #include <algorithm>
+#include <numeric>
 #include "../translate_index.h"
 #include "../buffer/buffer.h"
 
@@ -14,10 +15,10 @@ namespace lithe {
     // Allocates and manipulates a
     // buffer of objects.
     struct allocator {
-        const buffer& buff;
+        const lithe::buffer& buff;
         const std::vector<size_t>& sizes;
-        size_t entity_size;
         const std::vector<size_t>& starting;
+        size_t entity_size;
 
 
         // These arrays must be passed by value or else
@@ -33,10 +34,10 @@ namespace lithe {
 
         // Insert an object to a buffer.
         template <typename T>
-        T& insert(int x, int y, const T& item) {
-            int i = lithe::translate_index(buff.chunk_size, x, y);
+        T& insert(lithe::component_id x, lithe::entity_id y, const T& item) {
+            size_t i = lithe::translate_index(buff.chunk_size, x, y);
 
-            return *(new (buff.buff + (i + sizes[x])) T{item});
+            return *(new (buff.buff + (i + starting[x])) T{item});
         }
 
 
@@ -45,32 +46,48 @@ namespace lithe {
         // - both by val and by ref.
         // e.g: auto& (ref) or auto (val).
         template <typename T>
-        T& get(int x, int y) {
-            int i = lithe::translate_index(buff.chunk_size, x, y);
+        T& get(lithe::component_id x, lithe::entity_id y) {
+            size_t i = lithe::translate_index(buff.chunk_size, x, y);
 
             return *static_cast<T*>(
-                static_cast<void*>(buff.buff + (i + sizes[x]))
+                static_cast<void*>(buff.buff + (i + starting[x]))
             );
         }
 
 
         template <typename T>
-        void remove(int x, int y) {
+        void remove(lithe::component_id x, lithe::entity_id y) {
             get<T>(x, y).~T();
-        }
-
-
-        template <typename T>
-        void swap(int x1, int y1, int x2, int y2) {
-            std::swap(get<T>(x1, y1), get<T>(x2, y2));
         }
 
 
         // Value initialises a region of the buffer.
         template <typename T>
-        void zero(int x, int y) {
-            std::fill_n(buff.buff, sizeof(T), 0);
+        void zero(lithe::component_id x, lithe::entity_id y) {
+            std::fill_n(
+                buff.buff + (i + starting[x]),  // Find start of component.
+                sizeof(T),
+                0
+            );
         }
+
+
+        template <typename T>
+        void swap_component(
+            lithe::component_id x1,
+            lithe::entity_id y1,
+
+            lithe::component_id x2,
+            lithe::entity_id y2
+        ) {
+            std::swap(get<T>(x1, y1), get<T>(x2, y2));
+        }
+
+
+        void swap(
+            lithe::entity_id a,
+            lithe::entity_id b
+        );
     };
 }
 

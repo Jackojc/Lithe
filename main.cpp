@@ -21,6 +21,16 @@ struct position {
 };
 
 
+struct name {
+    std::string n;
+
+    void print() {
+        std::cout << n << std::endl;
+    }
+};
+
+
+
 // SYSTEMS
 void update_position(lithe::entity& self, float x, float y) {
     auto& pos = self.get<position>();
@@ -70,31 +80,48 @@ void update_position(lithe::entity& self, float x, float y) {
 
 
 
-constexpr unsigned ENTITIES = 1000;
+constexpr unsigned ENTITIES = 10;
 
 
 
 
 
 int main(int argc, const char* argv[]) {
-    auto info      = lithe::get_info<position>();
+    auto info      = lithe::get_info<position, name>();
     auto buff      = lithe::setup_buffer(info, ENTITIES);
     auto alloc     = lithe::setup_allocator(info, buff);
     auto container = lithe::setup_container(alloc);
 
-    lithe::entity ent1(0, container);
-    lithe::entity ent2(1, container);
 
-    ent1.insert(position{33, 33});
-    ent2.insert(position{55, 55});
+    lithe::entity a(0, container);
+    lithe::entity b(1, container);
 
-    ent1.get<position>().print();
-    ent2.get<position>().print();
 
-    container.swap<position>(0, 1);
+    a.insert(position{3, 3});
+    a.insert(name{"A"});
 
-    ent1.get<position>().print();
-    ent2.get<position>().print();
+
+    b.insert(position{77, 77});
+    b.insert(name{"B"});
+
+
+    a.get<position>().print();
+    a.get<name>().print();
+    b.get<position>().print();
+    b.get<name>().print();
+
+
+    std::cout << "SWAP\n";
+    a.swap(b.uid);
+
+
+    a.get<position>().print();
+    a.get<name>().print();
+    b.get<position>().print();
+    b.get<name>().print();
+
+
+
 
 
     return 0;

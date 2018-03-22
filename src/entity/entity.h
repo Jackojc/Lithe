@@ -49,6 +49,15 @@ namespace lithe {
         T& get() {
             return container.get<T>(uid);
         }
+
+
+        template <typename T>
+        void swap_component(lithe::entity_id other) {
+            container.swap_component<T>(uid, other);
+        }
+
+
+        void swap(lithe::entity_id other);
     };
 }
 

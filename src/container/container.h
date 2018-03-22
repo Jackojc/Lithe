@@ -41,10 +41,13 @@ namespace lithe {
 
 
         template <typename T>
-        void swap(lithe::entity_id a, lithe::entity_id b) {
+        void swap_component(lithe::entity_id a, lithe::entity_id b) {
             lithe::component_id tmp = lithe::get_type_uid<T>();
-            alloc.swap<T>(tmp, a, tmp, b);
+            alloc.swap_component<T>(tmp, a, tmp, b);
         }
+
+
+        void swap(lithe::entity_id a, lithe::entity_id b);
     };
 }
 

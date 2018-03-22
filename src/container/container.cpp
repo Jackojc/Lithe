@@ -7,4 +7,9 @@ namespace lithe {
     {
 
     }
+
+
+    void container::swap(lithe::entity_id a, lithe::entity_id b) {
+        alloc.swap(a, b);
+    }
 }

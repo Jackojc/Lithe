@@ -9,4 +9,9 @@ namespace lithe {
     {
 
     }
+
+
+    void entity::swap(lithe::entity_id other) {
+        container.swap(uid, other);
+    }
 }
