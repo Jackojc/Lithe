@@ -65,8 +65,10 @@ namespace lithe {
         // Value initialises a region of the buffer.
         template <typename T>
         void zero(lithe::component_id x, lithe::entity_id y) {
+            size_t i = lithe::translate_index(entity_size, x, y);
+
             std::fill_n(
-                buff + (i + starting->at(x),)  // Find start of component.
+                buff + (i + starting->at(x)),  // Find start of component.
                 sizeof(T),
                 0
             );

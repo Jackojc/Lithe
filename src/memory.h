@@ -28,9 +28,9 @@ namespace lithe {
     }
 
 
-    inline void destroy_buffer(char* buffer) {
-        if (buffer != nullptr)  // Make sure we aren't trying to free a nullptr.
-            ::operator delete(static_cast<void*>(buffer));
+    inline void destroy_buffer(char* ptr) {
+        if (ptr != nullptr)  // Make sure we aren't trying to free a nullptr.
+            ::operator delete(static_cast<void*>(ptr));
     }
 }
 

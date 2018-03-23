@@ -16,12 +16,44 @@ namespace lithe {
         bool any_unused;
 
 
-        lithe::entity_id withdraw();
-        void deposit(lithe::entity_id uid);
+        lithe::entity_id withdraw() {
+            if (any_unused) {
+                if (unused.size() == 1)
+                    any_unused = false;
+                return unused.pop();
+            }
+
+            return current++;
+        }
 
 
-        std::vector<lithe::entity_id> withdraw(unsigned num);
-        void deposit(std::vector<lithe::entity_id>&& uids);
+        void deposit(lithe::entity_id uid) {
+            if (uid - 1 == current) {
+                current--;
+                return;
+            }
+
+            any_unused = true;
+            unused.push(uid);
+        }
+
+
+        std::vector<lithe::entity_id> withdraw(unsigned num) {
+            std::vector<lithe::entity_id> uids;
+
+            for (unsigned i = 0; i < num; ++i) {
+                uids.push_back(withdraw());
+            }
+
+            return uids;
+        }
+
+
+        void deposit(std::vector<lithe::entity_id>&& uids) {
+            for (auto uid: uids) {
+                deposit(uid);
+            }
+        }
     };
 
 
