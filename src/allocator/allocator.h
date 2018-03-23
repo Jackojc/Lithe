@@ -17,7 +17,7 @@ namespace lithe {
     struct allocator {
         lithe::buffer buff;
         std::vector<size_t>* sizes;
-        std::vector<size_t>* starting;
+        std::vector<size_t>* origins;
         size_t entity_size;
 
 
@@ -28,7 +28,7 @@ namespace lithe {
         allocator(
             lithe::buffer buff_,
             std::vector<size_t>* sizes_,
-            std::vector<size_t>* starting_,
+            std::vector<size_t>* origins_,
             size_t entity_size_
         );
 
@@ -38,7 +38,7 @@ namespace lithe {
         T& insert(lithe::component_id x, lithe::entity_id y, const T& item) {
             size_t i = lithe::translate_index(entity_size, x, y);
 
-            return *(new (buff + (i + starting->at(x))) T{item});
+            return *(new (buff + (i + origins->at(x))) T{item});
         }
 
 
@@ -51,7 +51,7 @@ namespace lithe {
             size_t i = lithe::translate_index(entity_size, x, y);
 
             return *static_cast<T*>(
-                static_cast<void*>(buff + (i + starting->at(x)))
+                static_cast<void*>(buff + (i + origins->at(x)))
             );
         }
 
@@ -68,7 +68,7 @@ namespace lithe {
             size_t i = lithe::translate_index(entity_size, x, y);
 
             std::fill_n(
-                buff + (i + starting->at(x)),  // Find start of component.
+                buff + (i + origins->at(x)),  // Find start of component.
                 sizeof(T),
                 0
             );

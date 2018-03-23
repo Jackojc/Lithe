@@ -5,12 +5,12 @@ namespace lithe {
     allocator::allocator(
         lithe::buffer buff_,
         std::vector<size_t>* sizes_,
-        std::vector<size_t>* starting_,
+        std::vector<size_t>* origins_,
         size_t entity_size_
     ):
         buff(buff_),
         sizes(sizes_),
-        starting(starting_),
+        origins(origins_),
         entity_size(entity_size_)
     {
 
