@@ -1,127 +1,76 @@
 #include <iostream>
 #include <vector>
 #include <deque>
+#include <chrono>
+#include <tuple>
+#include <cstdint>
 
 #include "src/utils.h"
 #include "src/uid.h"
 #include "src/order.h"
-#include "src/buffer/buffer.h"
+#include "src/profile.h"
 #include "src/allocator/allocator.h"
 #include "src/container/container.h"
 #include "src/entity/entity.h"
 
 
+
+
 // COMPONENTS
 struct position {
     float x, y;
-
-    void print() {
-        std::cout << x << ": " << y << std::endl;
-    }
 };
 
 
 struct name {
     std::string n;
-
-    void print() {
-        std::cout << n << std::endl;
-    }
 };
 
 
 
-// SYSTEMS
-void update_position(lithe::entity& self, float x, float y) {
-    auto& pos = self.get<position>();
 
-    pos.x += x;
-    pos.y += y;
+
+
+
+
+// Function that iterates from 0 to ENTITIES and inserts components.
+void create_positions(lithe::container& container, unsigned num_entities) {
+    for (lithe::entity_id i = 0; i < num_entities; ++i) {
+        float tmp = static_cast<float>(i);
+        container.insert(i, position{ tmp, tmp });
+    }
 }
 
 
 
 
+// Number of entities.
+constexpr uintmax_t ENTITIES = 100000000;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*struct world {
-    // holds systems, entities and components...
-
-    void new_system(system sys);
-    void rem_system();
-
-    void update();
-
-    Entity& new_entity();
-    void rem_entity(entity&);
-    void get_entity(int id);
-};
-*/
-
-
-
-
-
-
-
-
-constexpr unsigned ENTITIES = 10;
-
-
-
+// Aliases for convenience.
+using ns = std::chrono::nanoseconds;
+using ms = std::chrono::milliseconds;
+using sec = std::chrono::seconds;
 
 
 int main(int argc, const char* argv[]) {
-    auto info      = lithe::get_info<position, name>();
-    auto buff      = lithe::setup_buffer(info, ENTITIES);
-    auto alloc     = lithe::setup_allocator(info, buff);
-    auto container = lithe::setup_container(alloc);
+    auto info       = lithe::setup_info<position, name>(ENTITIES);
+    auto &container = info.get_container();
 
 
-    lithe::entity a(0, container);
-    lithe::entity b(1, container);
+    // Error checking.
+	if (info.buffer == nullptr) {
+		std::cerr << "Could not allocate enough memory to process!\n";
+		return -1;
+	}
 
 
-    a.insert(position{3, 3});
-    a.insert(name{"A"});
-
-
-    b.insert(position{77, 77});
-    b.insert(name{"B"});
-
-
-    a.get<position>().print();
-    a.get<name>().print();
-    b.get<position>().print();
-    b.get<name>().print();
-
-
-    std::cout << "SWAP\n";
-    a.swap(b.uid);
-
-
-    a.get<position>().print();
-    a.get<name>().print();
-    b.get<position>().print();
-    b.get<name>().print();
-
-
-
+    std::cout
+        << "Took: "
+        << lithe::profile<ms>(&create_positions, container, ENTITIES)
+        << "ms"
+    << std::endl;
 
 
     return 0;

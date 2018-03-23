@@ -7,11 +7,6 @@ project(${PROJECT_NAME})
 set(MAIN main.cpp)
 
 
-file(GLOB_RECURSE BUFFER
-    "src/buffer/*.cpp"
-)
-
-
 file(GLOB_RECURSE ALLOCATOR
     "src/allocator/*.cpp"
 )
@@ -54,11 +49,10 @@ file(GLOB_RECURSE MISC
 
 
 # EXECUTABLE
-add_executable(${PROJECT_NAME} ${BUFFER} ${ALLOCATOR} ${CONTAINER} ${ENTITY} ${SCENE_MANAGER} ${SCENE} ${UID_MANAGER} ${INFO} ${MISC} ${MAIN})
+add_executable(${PROJECT_NAME} ${ALLOCATOR} ${CONTAINER} ${ENTITY} ${SCENE_MANAGER} ${SCENE} ${UID_MANAGER} ${INFO} ${MISC} ${MAIN})
 
 
 # FILTERS
-source_group("buffer" FILES ${BUFFER})
 source_group("allocator" FILES ${ALLOCATOR})
 source_group("container" FILES ${CONTAINER})
 source_group("entity" FILES ${ENTITY})

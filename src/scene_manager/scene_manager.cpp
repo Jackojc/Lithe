@@ -24,7 +24,7 @@ namespace lithe {
 
 
     // Get the current scene.
-    lithe::scene& scene_manager::current() {
+    lithe::scene& scene_manager::current() const {
         return *objs.top();
     }
 
