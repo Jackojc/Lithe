@@ -1,9 +1,7 @@
 #include <iostream>
-#include <vector>
-#include <deque>
 #include <chrono>
-#include <tuple>
 #include <cstdint>
+
 
 #include "src/utils.h"
 #include "src/uid.h"
@@ -15,15 +13,26 @@
 
 
 
-
 // COMPONENTS
-struct position {
+struct position: lithe::component<position> {
     float x, y;
+
+    position(float X, float Y):
+        x(X), y(Y)
+    {
+
+    }
 };
 
 
-struct name {
+struct name: lithe::component<name> {
     std::string n;
+
+    name(const std::string& N):
+        n(N)
+    {
+
+    }
 };
 
 
@@ -37,7 +46,8 @@ struct name {
 void create_positions(lithe::container& container, unsigned num_entities) {
     for (lithe::entity_id i = 0; i < num_entities; ++i) {
         float tmp = static_cast<float>(i);
-        container.insert(i, position{ tmp, tmp });
+        container.insert(i, position{tmp, tmp});
+        container.insert(i, name{"Hello"});
     }
 }
 

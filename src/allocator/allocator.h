@@ -35,10 +35,10 @@ namespace lithe {
 
         // Insert an object to a buffer.
         template <typename T>
-        T& insert(lithe::component_id x, lithe::entity_id y, const T& item) {
+        void insert(lithe::component_id x, lithe::entity_id y, const T& item) {
             size_t i = lithe::translate_index(entity_size, x, y);
 
-            return *(new (buff + (i + origins->at(x))) T{item});
+            new (buff + (i + origins->at(x))) T(item);
         }
 
 

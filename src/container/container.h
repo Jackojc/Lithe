@@ -2,11 +2,13 @@
 #define LITHE_CONTAINER_H
 
 
-#include <vector>
+#include "../constants.h"
+#include "../assert.h"
 #include "../types.h"
 #include "../uid.h"
 #include "../translate_index.h"
 #include "../allocator/allocator.h"
+#include "../component/component.h"
 
 
 namespace lithe {
@@ -20,8 +22,28 @@ namespace lithe {
 
         // Attaches a component to a specified entity.
         template <typename T>
-        T& insert(lithe::entity_id entity, const T& item) {
-            return alloc->insert(lithe::get_type_uid<T>(), entity, item);
+        void insert(lithe::entity_id entity, const T& item) {
+            // This is very hacky but it does the trick.
+            // With debug enabled you get more verbose
+            // errors but incur come runtime cost.
+            #ifdef LITHE_DEBUG_FLAG
+                LITHE_ASSERT(
+                    (std::is_base_of<lithe::component<T>, T>::value),
+
+                    std::string{"Component ("}
+                    + typeid(T).name()
+                    + ") must be derived from `lithe::component`."
+                );
+
+            #else
+                // Fast compile time checking.
+                LITHE_STATIC_ASSERT(
+                    (std::is_base_of<lithe::component<T>, T>::value),
+                    "Component must be derived from `lithe::component`."
+                );
+            #endif
+
+            alloc->insert(lithe::get_type_uid<T>(), entity, item);
         }
 
 
@@ -36,7 +58,7 @@ namespace lithe {
         template <typename T>
         void remove(lithe::entity_id entity) {
             alloc->remove<T>(lithe::get_type_uid<T>(), entity);
-            //alloc->zero<T>(lithe::get_type_uid<T>(), entity);
+            alloc->zero<T>(lithe::get_type_uid<T>(), entity);
         }
 
 
