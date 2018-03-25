@@ -45,7 +45,7 @@ void create_positions(lithe::container& container, unsigned num_entities) {
 
 
 // Number of entities.
-constexpr uintmax_t ENTITIES = 100000000;
+constexpr uintmax_t ENTITIES = 100;
 
 
 // Aliases for convenience.
@@ -56,7 +56,9 @@ using sec = std::chrono::seconds;
 
 int main(int argc, const char* argv[]) {
     auto info       = lithe::setup_info<position, name>(ENTITIES);
-    auto &container = info.get_container();
+    auto &buffer    = lithe::setup_buffer(info);
+    auto &allocator = lithe::setup_allocator(info);
+    auto &container = lithe::setup_container(info);
 
 
     // Error checking.

@@ -20,9 +20,6 @@ namespace lithe {
         lithe::allocator allocator;
         lithe::container container;
 
-        // Function pointer for cleaning up buffer.
-        lithe::handler_destroy handler_destroy;
-
 
         info();
         ~info();

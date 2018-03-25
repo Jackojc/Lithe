@@ -43,28 +43,42 @@ namespace lithe {
 
     // Set everything that we need up properly.
     template <typename... TArgs>
-    inline lithe::info setup_info(
-        lithe::entity_id num_entities,
-
-        lithe::handler_create handle_c = &lithe::create_buffer,
-        lithe::handler_destroy handle_d = &lithe::destroy_buffer
-    ) {
-        lithe::info x;
+    inline lithe::info setup_info(lithe::entity_id num_entities) {
+        lithe::info info;
 
         // Information about the components.
-        x.sizes = lithe::get_sizes<TArgs...>();
-        x.origins = lithe::get_origins(x.sizes);
-        x.entity_size = lithe::get_total(x.sizes);
-        x.num_entities = num_entities;
+        info.sizes = lithe::get_sizes<TArgs...>();
+        info.origins = lithe::get_origins(info.sizes);
+        info.entity_size = lithe::get_total(info.sizes);
+        info.num_entities = num_entities;
 
-        // Objects to facilitate the manipulation of components.
-        x.buffer = handle_c(x.entity_size, x.num_entities);
-        x.handler_destroy = handle_d;
+        return info;
+    }
 
-        x.allocator = lithe::allocator(x.buffer, &x.sizes, &x.origins, x.entity_size);
-        x.container = lithe::container(&x.allocator);
 
-        return x;
+    inline lithe::buffer& setup_buffer(
+        lithe::info& info,
+        lithe::handler_create handler = &lithe::create_buffer
+    ) {
+        info.buffer = handler(info.entity_size, info.num_entities);
+        return info.buffer;
+    }
+
+
+    inline lithe::allocator& setup_allocator(lithe::info& info) {
+        info.allocator = lithe::allocator(
+            info.buffer,
+            &info.sizes,
+            &info.origins,
+            info.entity_size
+        );
+        return info.allocator;
+    }
+
+
+    inline lithe::container& setup_container(lithe::info& info) {
+        info.container = lithe::container(&info.allocator);
+        return info.container;
     }
 }
 

@@ -11,17 +11,13 @@ namespace lithe {
 
         buffer(nullptr),
         allocator(nullptr, nullptr, nullptr, 1),
-        container(nullptr),
-
-        handler_destroy(nullptr)
+        container(nullptr)
     {
 
     }
 
 
-    // Cleanup when we go out of scope.
     info::~info() {
-        handler_destroy(buffer);
     }
 
 
