@@ -2,6 +2,7 @@
 #define LITHE_CONTAINER_H
 
 
+#include <utility>
 #include "../constants.h"
 #include "../assert.h"
 #include "../types.h"
@@ -47,6 +48,13 @@ namespace lithe {
         }
 
 
+        template<typename T, typename... Ts>
+        void insert(lithe::entity_id entity, const T& t, const Ts&&... ts) {
+            insert(entity, t);
+            insert<Ts...>(entity, ts...);
+        }
+
+
         // Returns a reference to a component within an entity.
         template <typename T>
         T& get(lithe::entity_id entity) const {
@@ -55,10 +63,13 @@ namespace lithe {
 
 
         // Removes a component from an entity.
-        template <typename T>
+        template <typename T>//, typename... Ts>
         void remove(lithe::entity_id entity) {
             alloc->remove<T>(lithe::get_type_uid<T>(), entity);
             alloc->zero<T>(lithe::get_type_uid<T>(), entity);
+
+            alloc->remove<Ts...>(lithe::get_type_uid<Ts...>(), entity);
+            alloc->zero<Ts...>(lithe::get_type_uid<Ts...>(), entity);
         }
 
 

@@ -5,7 +5,6 @@
 #include <vector>
 #include <numeric>
 #include <cstddef>
-#include "order.h"
 #include "types.h"
 #include "memory.h"
 #include "allocator/allocator.h"
@@ -18,7 +17,6 @@ namespace lithe {
     // and put them into an array.
     template <typename... types>
     inline std::vector<size_t> get_sizes() {
-        lithe::order_types<types...>();
         return {sizeof(types)...};
     }
 
