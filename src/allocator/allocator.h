@@ -6,19 +6,19 @@
 #include <cstddef>
 #include <new>
 #include <algorithm>
-#include "../utils.h"
+#include <numeric>
 #include "../translate_index.h"
-#include "../buffer/buffer.h"
+#include "../types.h"
 
 
 namespace lithe {
     // Allocates and manipulates a
     // buffer of objects.
     struct allocator {
-        const buffer& buff;
-        const std::vector<size_t>& sizes;
+        lithe::buffer buff;
+        std::vector<size_t>* sizes;
+        std::vector<size_t>* origins;
         size_t entity_size;
-        const std::vector<int>& starting;
 
 
         // These arrays must be passed by value or else
@@ -26,18 +26,19 @@ namespace lithe {
         // access variables that have since gone out of
         // scope.
         allocator(
-            const buffer& buff,
-            const std::vector<size_t>& sizes_,
-            const std::vector<int>& starting_
+            lithe::buffer buff_,
+            std::vector<size_t>* sizes_,
+            std::vector<size_t>* origins_,
+            size_t entity_size_
         );
 
 
         // Insert an object to a buffer.
         template <typename T>
-        T& insert(int x, int y, const T& item) {
-            int i = translate_index(buff.chunk_size, x, y);
+        void attach(lithe::component_id x, lithe::entity_id y, const T& item) {
+            size_t i = lithe::translate_index(entity_size, x, y);
 
-            return *(new (buff.buff + (i + sizes[x])) T{item});
+            new (buff + (i + origins->at(x))) T(item);
         }
 
 
@@ -46,26 +47,53 @@ namespace lithe {
         // - both by val and by ref.
         // e.g: auto& (ref) or auto (val).
         template <typename T>
-        T& get(int x, int y) {
-            int i = translate_index(buff.chunk_size, x, y);
+        T& get(lithe::component_id x, lithe::entity_id y) const {
+            size_t i = lithe::translate_index(entity_size, x, y);
 
             return *static_cast<T*>(
-                static_cast<void*>(buff.buff + (i + sizes[x]))
+                static_cast<void*>(buff + (i + origins->at(x)))
             );
         }
 
 
+        // Calls destructor on component.
         template <typename T>
-        void remove(int x, int y) {
+        void detach(lithe::component_id x, lithe::entity_id y) {
             get<T>(x, y).~T();
         }
 
 
         // Value initialises a region of the buffer.
         template <typename T>
-        void zero(int x, int y) {
-            std::fill_n(buff, sizeof(T), 0);
+        void zero(lithe::component_id x, lithe::entity_id y) {
+            size_t i = lithe::translate_index(entity_size, x, y);
+
+            std::fill_n(
+                buff + (i + origins->at(x)),  // Find start of component.
+                sizeof(T),
+                0
+            );
         }
+
+
+        // Swap a single component between two entities.
+        template <typename T>
+        void swap_component(
+            lithe::component_id x1,
+            lithe::entity_id y1,
+
+            lithe::component_id x2,
+            lithe::entity_id y2
+        ) {
+            std::swap(get<T>(x1, y1), get<T>(x2, y2));
+        }
+
+
+        // Swap two entities. (and their components.)
+        void swap(
+            lithe::entity_id a,
+            lithe::entity_id b
+        );
     };
 }
 

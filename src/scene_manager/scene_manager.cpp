@@ -1,7 +1,3 @@
-#ifndef LITHE_SCENE_MANAGER_CPP
-#define LITHE_SCENE_MANAGER_CPP
-
-
 #include "scene_manager.h"
 
 
@@ -28,7 +24,7 @@ namespace lithe {
 
 
     // Get the current scene.
-    lithe::scene& scene_manager::current() {
+    lithe::scene& scene_manager::current() const {
         return *objs.top();
     }
 
@@ -39,6 +35,3 @@ namespace lithe {
             current().update_all();
     }
 }
-
-
-#endif
