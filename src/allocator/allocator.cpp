@@ -17,30 +17,36 @@ namespace lithe {
     }
 
 
+    // Swap two entities. (and their components.)
     void allocator::swap(
         lithe::entity_id a,
         lithe::entity_id b
     ) {
+        // Create temporary buffer.
         char* tmp = static_cast<char*>(::operator new(entity_size));
 
+        // Copy A into TMP.
         std::copy(
             buff + (entity_size * a),
             buff + (entity_size * a) + entity_size,
             tmp
         );
 
+        // Copy B into A.
         std::copy(
             buff + (entity_size * b),
             buff + (entity_size * b) + entity_size,
             buff + (entity_size * a)
         );
 
+        // Copy TMP into B.
         std::copy(
             tmp,
             tmp + entity_size,
             buff + (entity_size * b)
         );
 
+        // Delete temporary buffer.
         delete tmp;
     }
 }

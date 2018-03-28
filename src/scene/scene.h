@@ -17,13 +17,8 @@ namespace lithe {
 
 
         void internal_event();
-
-
         void internal_update();
-
-
         void internal_draw();
-
 
         void update_all();
     };

@@ -32,12 +32,15 @@ namespace lithe {
         }
 
 
+        // Remove the top scene.
         void remove();
 
 
+        // Get the currently active scene.
         lithe::scene& current() const;
 
 
+        // Update the currently active scene.
         void update();
     };
 }

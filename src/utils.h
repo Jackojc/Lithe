@@ -5,7 +5,6 @@
 #include <vector>
 #include <numeric>
 #include <cstddef>
-#include "order.h"
 #include "types.h"
 #include "memory.h"
 #include "allocator/allocator.h"
@@ -18,7 +17,6 @@ namespace lithe {
     // and put them into an array.
     template <typename... types>
     inline std::vector<size_t> get_sizes() {
-        lithe::order_types<types...>();
         return {sizeof(types)...};
     }
 
@@ -42,12 +40,12 @@ namespace lithe {
 
 
     // Set everything that we need up properly.
-    template <typename... TArgs>
+    template <typename... Ts>
     inline lithe::info setup_info(lithe::entity_id num_entities) {
         lithe::info info;
 
         // Information about the components.
-        info.sizes = lithe::get_sizes<TArgs...>();
+        info.sizes = lithe::get_sizes<Ts...>();
         info.origins = lithe::get_origins(info.sizes);
         info.entity_size = lithe::get_total(info.sizes);
         info.num_entities = num_entities;
@@ -56,6 +54,11 @@ namespace lithe {
     }
 
 
+    // Creates a buffer in which to store all the components.
+    // We let the user provide their own handler for creating
+    // the buffer because we're such nice people.
+
+    // It's still up to the user to manually destroy the buffer later.
     inline lithe::buffer& setup_buffer(
         lithe::info& info,
         lithe::handler_create handler = &lithe::create_buffer
@@ -65,6 +68,8 @@ namespace lithe {
     }
 
 
+    // Initialises the allocator object inside the info struct
+    // and returns a reference to it.
     inline lithe::allocator& setup_allocator(lithe::info& info) {
         info.allocator = lithe::allocator(
             info.buffer,
@@ -76,6 +81,8 @@ namespace lithe {
     }
 
 
+    // Initialises the container object inside the info struct
+    // and returns a reference to it.
     inline lithe::container& setup_container(lithe::info& info) {
         info.container = lithe::container(&info.allocator);
         return info.container;

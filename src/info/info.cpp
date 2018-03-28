@@ -17,10 +17,6 @@ namespace lithe {
     }
 
 
-    info::~info() {
-    }
-
-
     // Getters.
     lithe::buffer& info::get_buffer() {
         return buffer;

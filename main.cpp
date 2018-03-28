@@ -3,21 +3,14 @@
 #include <cstdint>
 
 
-#include "src/utils.h"
-#include "src/uid.h"
-#include "src/order.h"
-#include "src/profile.h"
-#include "src/allocator/allocator.h"
-#include "src/container/container.h"
-#include "src/entity/entity.h"
-
+#include "src/lithe.h"
 
 
 // COMPONENTS
 struct position: lithe::component<position> {
-    float x, y;
+    unsigned long long x, y;
 
-    position(float X, float Y):
+    position(unsigned long long X, unsigned long long Y):
         x(X), y(Y)
     {
 
@@ -45,17 +38,18 @@ struct name: lithe::component<name> {
 // Function that iterates from 0 to ENTITIES and inserts components.
 void create_positions(lithe::container& container, unsigned num_entities) {
     for (lithe::entity_id i = 0; i < num_entities; ++i) {
-        float tmp = static_cast<float>(i);
-        container.insert(i, position{tmp, tmp});
-        container.insert(i, name{"Hello"});
+        container.attach(i, position{i, i}, name{"Hello"});
+    }
+
+
+    for (lithe::entity_id i = 0; i < num_entities; ++i) {
+        container.detach<position, name>(i);
     }
 }
 
 
-
-
 // Number of entities.
-constexpr uintmax_t ENTITIES = 100;
+constexpr uintmax_t ENTITIES = 5;
 
 
 // Aliases for convenience.
@@ -72,10 +66,10 @@ int main(int argc, const char* argv[]) {
 
 
     // Error checking.
-	if (info.buffer == nullptr) {
-		std::cerr << "Could not allocate enough memory to process!\n";
-		return -1;
-	}
+    if (info.buffer == nullptr) {
+        std::cerr << "Could not allocate enough memory to process!\n";
+        return -1;
+    }
 
 
     std::cout
@@ -83,6 +77,9 @@ int main(int argc, const char* argv[]) {
         << lithe::profile<ms>(&create_positions, container, ENTITIES)
         << "ms"
     << std::endl;
+
+
+    lithe::destroy_buffer(buffer);
 
 
     return 0;

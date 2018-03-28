@@ -35,7 +35,7 @@ namespace lithe {
 
         // Insert an object to a buffer.
         template <typename T>
-        void insert(lithe::component_id x, lithe::entity_id y, const T& item) {
+        void attach(lithe::component_id x, lithe::entity_id y, const T& item) {
             size_t i = lithe::translate_index(entity_size, x, y);
 
             new (buff + (i + origins->at(x))) T(item);
@@ -56,8 +56,9 @@ namespace lithe {
         }
 
 
+        // Calls destructor on component.
         template <typename T>
-        void remove(lithe::component_id x, lithe::entity_id y) {
+        void detach(lithe::component_id x, lithe::entity_id y) {
             get<T>(x, y).~T();
         }
 
@@ -75,6 +76,7 @@ namespace lithe {
         }
 
 
+        // Swap a single component between two entities.
         template <typename T>
         void swap_component(
             lithe::component_id x1,
@@ -87,6 +89,7 @@ namespace lithe {
         }
 
 
+        // Swap two entities. (and their components.)
         void swap(
             lithe::entity_id a,
             lithe::entity_id b

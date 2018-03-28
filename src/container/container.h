@@ -2,6 +2,7 @@
 #define LITHE_CONTAINER_H
 
 
+#include <utility>
 #include "../constants.h"
 #include "../assert.h"
 #include "../types.h"
@@ -22,7 +23,7 @@ namespace lithe {
 
         // Attaches a component to a specified entity.
         template <typename T>
-        void insert(lithe::entity_id entity, const T& item) {
+        void attach(lithe::entity_id entity, const T& item) {
             // This is very hacky but it does the trick.
             // With debug enabled you get more verbose
             // errors but incur come runtime cost.
@@ -43,7 +44,16 @@ namespace lithe {
                 );
             #endif
 
-            alloc->insert(lithe::get_type_uid<T>(), entity, item);
+            alloc->attach(lithe::get_type_uid<T>(), entity, item);
+        }
+
+
+        // Convenience wrapper to allow you to remove
+        // multiple components with one call.
+        template<typename T, typename... Ts>
+        void attach(lithe::entity_id entity, const T& t, const Ts&&... ts) {
+            attach(entity, t);
+            attach<Ts...>(entity, ts...);
         }
 
 
@@ -54,14 +64,24 @@ namespace lithe {
         }
 
 
-        // Removes a component from an entity.
+        // Detaches a component from an entity.
         template <typename T>
-        void remove(lithe::entity_id entity) {
-            alloc->remove<T>(lithe::get_type_uid<T>(), entity);
+        void detach(lithe::entity_id entity) {
+            alloc->detach<T>(lithe::get_type_uid<T>(), entity);
             alloc->zero<T>(lithe::get_type_uid<T>(), entity);
         }
 
 
+        // Convenience wrapper to detach multiple
+        // components with a single call.
+        template <typename T1, typename T2, typename... Ts>
+        void detach(lithe::entity_id entity) {
+            detach<T1>(entity);
+            detach<T2, Ts...>(entity);
+        }
+
+
+        // Swap a single component between two entities.
         template <typename T>
         void swap_component(lithe::entity_id a, lithe::entity_id b) {
             lithe::component_id tmp = lithe::get_type_uid<T>();
@@ -69,6 +89,7 @@ namespace lithe {
         }
 
 
+        // Swap two entities. (and their components.)
         void swap(lithe::entity_id a, lithe::entity_id b);
     };
 }

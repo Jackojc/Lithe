@@ -11,6 +11,7 @@ namespace lithe {
     }
 
 
+    // Swap the components of this entity with another one.
     void entity::swap(lithe::entity_id other) {
         container.swap(uid, other);
     }

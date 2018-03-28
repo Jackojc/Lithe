@@ -21,19 +21,37 @@ namespace lithe {
         entity(const lithe::entity_id uid_, lithe::container& container_);
 
 
-        // Insert a component.
+        // Attach a component.
         template <typename T>
-        T& insert(const T& item) {
-            component_mask[lithe::get_type_uid<T>()] = 1;
-            return container.insert<T>(uid, item);
+        void attach(const T& item) {
+            component_mask[lithe::get_type_uid<T>()] = true;
+            container.attach<T>(uid, item);
         }
 
 
-        // Remove a component.
+        // Convenience wrapper to allow you to attach
+        // multiple components in one call.
+        template<typename T, typename... Ts>
+        void attach(const T& t, const Ts&&... ts) {
+            attach(t);
+            attach<Ts...>(ts...);
+        }
+
+
+        // Detach a component.
         template <typename T>
-        void remove() {
-            container.remove<T>(uid);
-            component_mask[lithe::get_type_uid<T>()] = 0;
+        void detach() {
+            container.detach<T>(uid);
+            component_mask[lithe::get_type_uid<T>()] = false;
+        }
+
+
+        // Convenience wrapper to allow you to
+        // detach multiple components in one call.
+        template <typename T1, typename T2, typename... Ts>
+        void detach() {
+            detach<T1>(uid);
+            detach<T2, Ts...>(uid);
         }
 
 
@@ -51,12 +69,14 @@ namespace lithe {
         }
 
 
+        // Swap a component with another entity.
         template <typename T>
         void swap_component(lithe::entity_id other) {
             container.swap_component<T>(uid, other);
         }
 
 
+        // Swap all the components of this entity with another entity.
         void swap(lithe::entity_id other);
     };
 }
