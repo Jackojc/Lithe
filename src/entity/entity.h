@@ -29,6 +29,8 @@ namespace lithe {
         }
 
 
+        // Convenience wrapper to allow you to attach
+        // multiple components in one call.
         template<typename T, typename... Ts>
         void attach(const T& t, const Ts&&... ts) {
             attach(t);
@@ -39,11 +41,13 @@ namespace lithe {
         // Detach a component.
         template <typename T>
         void detach() {
-            container.detach<Ts...>(uid);
+            container.detach<T>(uid);
             component_mask[lithe::get_type_uid<T>()] = false;
         }
 
 
+        // Convenience wrapper to allow you to
+        // detach multiple components in one call.
         template <typename T1, typename T2, typename... Ts>
         void detach() {
             detach<T1>(uid);
@@ -65,12 +69,14 @@ namespace lithe {
         }
 
 
+        // Swap a component with another entity.
         template <typename T>
         void swap_component(lithe::entity_id other) {
             container.swap_component<T>(uid, other);
         }
 
 
+        // Swap all the components of this entity with another entity.
         void swap(lithe::entity_id other);
     };
 }

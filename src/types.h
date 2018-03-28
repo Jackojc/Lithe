@@ -6,9 +6,11 @@
 
 
 namespace lithe {
+    // Handy aliases for if we ever need to change the underlying type.
     using component_id = uintmax_t;
     using entity_id = uintmax_t;
 
+    // Type alias to make things perhaps a little more clear.
     using buffer = char*;
 
     // Function pointer aliases for handling creation
@@ -18,8 +20,8 @@ namespace lithe {
 
     // Type alias for generic function pointer,
     // looks nicer than the standard syntax.
-    template <typename T, typename... TArgs>
-    using fn_ptr = T(*)(TArgs...);
+    template <typename T, typename... Ts>
+    using fn_ptr = T(*)(Ts...);
 }
 
 

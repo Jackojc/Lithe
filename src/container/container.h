@@ -48,6 +48,8 @@ namespace lithe {
         }
 
 
+        // Convenience wrapper to allow you to remove
+        // multiple components with one call.
         template<typename T, typename... Ts>
         void attach(lithe::entity_id entity, const T& t, const Ts&&... ts) {
             attach(entity, t);
@@ -62,6 +64,7 @@ namespace lithe {
         }
 
 
+        // Detaches a component from an entity.
         template <typename T>
         void detach(lithe::entity_id entity) {
             alloc->detach<T>(lithe::get_type_uid<T>(), entity);
@@ -69,7 +72,8 @@ namespace lithe {
         }
 
 
-        // Detaches a component from an entity.
+        // Convenience wrapper to detach multiple
+        // components with a single call.
         template <typename T1, typename T2, typename... Ts>
         void detach(lithe::entity_id entity) {
             detach<T1>(entity);
@@ -77,6 +81,7 @@ namespace lithe {
         }
 
 
+        // Swap a single component between two entities.
         template <typename T>
         void swap_component(lithe::entity_id a, lithe::entity_id b) {
             lithe::component_id tmp = lithe::get_type_uid<T>();
@@ -84,6 +89,7 @@ namespace lithe {
         }
 
 
+        // Swap two entities. (and their components.)
         void swap(lithe::entity_id a, lithe::entity_id b);
     };
 }

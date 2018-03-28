@@ -56,6 +56,7 @@ namespace lithe {
         }
 
 
+        // Calls destructor on component.
         template <typename T>
         void detach(lithe::component_id x, lithe::entity_id y) {
             get<T>(x, y).~T();
@@ -75,6 +76,7 @@ namespace lithe {
         }
 
 
+        // Swap a single component between two entities.
         template <typename T>
         void swap_component(
             lithe::component_id x1,
@@ -87,6 +89,7 @@ namespace lithe {
         }
 
 
+        // Swap two entities. (and their components.)
         void swap(
             lithe::entity_id a,
             lithe::entity_id b
