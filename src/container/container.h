@@ -23,7 +23,7 @@ namespace lithe {
 
         // Attaches a component to a specified entity.
         template <typename T>
-        void insert(lithe::entity_id entity, const T& item) {
+        void attach(lithe::entity_id entity, const T& item) {
             // This is very hacky but it does the trick.
             // With debug enabled you get more verbose
             // errors but incur come runtime cost.
@@ -44,14 +44,14 @@ namespace lithe {
                 );
             #endif
 
-            alloc->insert(lithe::get_type_uid<T>(), entity, item);
+            alloc->attach(lithe::get_type_uid<T>(), entity, item);
         }
 
 
         template<typename T, typename... Ts>
-        void insert(lithe::entity_id entity, const T& t, const Ts&&... ts) {
-            insert(entity, t);
-            insert<Ts...>(entity, ts...);
+        void attach(lithe::entity_id entity, const T& t, const Ts&&... ts) {
+            attach(entity, t);
+            attach<Ts...>(entity, ts...);
         }
 
 
@@ -62,14 +62,17 @@ namespace lithe {
         }
 
 
-        // Removes a component from an entity.
-        template <typename T>//, typename... Ts>
-        void remove(lithe::entity_id entity) {
-            alloc->remove<T>(lithe::get_type_uid<T>(), entity);
+        template <typename T>
+        void detach(lithe::entity_id entity) {
+            alloc->detach<T>(lithe::get_type_uid<T>(), entity);
             alloc->zero<T>(lithe::get_type_uid<T>(), entity);
+        }
 
-            alloc->remove<Ts...>(lithe::get_type_uid<Ts...>(), entity);
-            alloc->zero<Ts...>(lithe::get_type_uid<Ts...>(), entity);
+
+        // Detaches a component from an entity.
+        template <typename... Ts>
+        void detach(lithe::entity_id entity) {
+            detach<Ts...>(entity);
         }
 
 

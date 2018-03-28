@@ -39,12 +39,12 @@ struct name: lithe::component<name> {
 // Function that iterates from 0 to ENTITIES and inserts components.
 void create_positions(lithe::container& container, unsigned num_entities) {
     for (lithe::entity_id i = 0; i < num_entities; ++i) {
-        container.insert(i, position{i, i}, name{"Hello"});
+        container.attach(i, position{i, i}, name{"Hello"});
     }
 
 
     for (lithe::entity_id i = 0; i < num_entities; ++i) {
-        container.remove<position>(i);
+        container.detach<position, name>(i);
     }
 }
 

@@ -21,20 +21,20 @@ namespace lithe {
         entity(const lithe::entity_id uid_, lithe::container& container_);
 
 
-        // Insert a component.
-        template <typename T>
-        T& insert(const T& item) {
-            component_mask[lithe::get_type_uid<T>()] = 1;
-            return container.insert<T>(uid, item);
+        // Attach a component.
+        /*template <typename T, typename... Ts>
+        void attach(const T& item) {
+            component_mask[lithe::get_type_uid<T>()] = true;
+            container.attach<T>(uid, item);
         }
 
 
-        // Remove a component.
-        template <typename T>
-        void remove() {
-            container.remove<T>(uid);
-            component_mask[lithe::get_type_uid<T>()] = 0;
-        }
+        // Detach a component.
+        template <typename T, typename... Ts>
+        void detach() {
+            container.detach<Ts...>(uid);
+            component_mask[lithe::get_type_uid<T>()] = false;
+        }*/
 
 
         // Check if this entity has a certain component.
