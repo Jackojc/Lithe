@@ -2,7 +2,7 @@
 #define LITHE_ENTITY_H
 
 
-#include <cmath>
+#include <iostream>
 #include <bitset>
 #include "../types.h"
 #include "../container/container.h"

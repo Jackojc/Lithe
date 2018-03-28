@@ -2,6 +2,7 @@
 #define LITHE_TYPES_H
 
 
+#include <chrono>
 #include <cstdint>
 
 
@@ -22,6 +23,15 @@ namespace lithe {
     // looks nicer than the standard syntax.
     template <typename T, typename... Ts>
     using fn_ptr = T(*)(Ts...);
+
+
+    // Chrono aliases.
+    using nano  = std::chrono::nanoseconds;
+    using micro = std::chrono::microseconds;
+    using milli = std::chrono::milliseconds;
+    using sec   = std::chrono::seconds;
+    using min   = std::chrono::minutes;
+    using hour  = std::chrono::hours;
 }
 
 

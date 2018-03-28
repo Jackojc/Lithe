@@ -16,3 +16,9 @@ namespace lithe {
         container.swap(uid, other);
     }
 }
+
+
+std::ostream& operator<<(std::ostream& os, const lithe::entity& entity) {
+    os << entity.uid;
+    return os;
+}
