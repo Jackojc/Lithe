@@ -70,9 +70,10 @@ namespace lithe {
 
 
         // Detaches a component from an entity.
-        template <typename... Ts>
+        template <typename T1, typename T2, typename... Ts>
         void detach(lithe::entity_id entity) {
-            detach<Ts...>(entity);
+            detach<T1>(entity);
+            detach<T2, Ts...>(entity);
         }
 
 

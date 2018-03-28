@@ -6,12 +6,11 @@
 #include "src/lithe.h"
 
 
-
 // COMPONENTS
 struct position: lithe::component<position> {
-    long unsigned x, y;
+    unsigned long long x, y;
 
-    position(long unsigned X, long unsigned Y):
+    position(unsigned long long X, unsigned long long Y):
         x(X), y(Y)
     {
 
@@ -49,8 +48,6 @@ void create_positions(lithe::container& container, unsigned num_entities) {
 }
 
 
-
-
 // Number of entities.
 constexpr uintmax_t ENTITIES = 5;
 
@@ -69,10 +66,10 @@ int main(int argc, const char* argv[]) {
 
 
     // Error checking.
-	if (info.buffer == nullptr) {
-		std::cerr << "Could not allocate enough memory to process!\n";
-		return -1;
-	}
+    if (info.buffer == nullptr) {
+        std::cerr << "Could not allocate enough memory to process!\n";
+        return -1;
+    }
 
 
     std::cout
@@ -82,7 +79,7 @@ int main(int argc, const char* argv[]) {
     << std::endl;
 
 
-    delete buffer;
+    lithe::destroy_buffer(buffer);
 
 
     return 0;

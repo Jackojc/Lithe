@@ -22,7 +22,6 @@ namespace lithe {
             {
 
             }
-            virtual ~component() {}
         };
 
     // If we are in release, we dont want added bloat
@@ -33,7 +32,6 @@ namespace lithe {
             component() {
                 lithe::get_type_uid<T>();
             }
-            virtual ~component() {}
         };
     #endif
 }

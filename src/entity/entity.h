@@ -22,19 +22,33 @@ namespace lithe {
 
 
         // Attach a component.
-        /*template <typename T, typename... Ts>
+        template <typename T>
         void attach(const T& item) {
             component_mask[lithe::get_type_uid<T>()] = true;
             container.attach<T>(uid, item);
         }
 
 
+        template<typename T, typename... Ts>
+        void attach(const T& t, const Ts&&... ts) {
+            attach(t);
+            attach<Ts...>(ts...);
+        }
+
+
         // Detach a component.
-        template <typename T, typename... Ts>
+        template <typename T>
         void detach() {
             container.detach<Ts...>(uid);
             component_mask[lithe::get_type_uid<T>()] = false;
-        }*/
+        }
+
+
+        template <typename T1, typename T2, typename... Ts>
+        void detach() {
+            detach<T1>(uid);
+            detach<T2, Ts...>(uid);
+        }
 
 
         // Check if this entity has a certain component.

@@ -75,7 +75,7 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 
 #MSVC
 if(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /Ox /GL")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++14 /W3 /Ox /GL")
 endif(MSVC)
 
 
