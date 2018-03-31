@@ -38,7 +38,7 @@ namespace lithe {
         void attach(lithe::component_id x, lithe::entity_id y, const T& item) {
             size_t i = lithe::translate_index(entity_size, x, y);
 
-            new (buff + (i + origins->at(x))) T(item);
+            new (buff.get() + (i + origins->at(x))) T(item);
         }
 
 
@@ -51,7 +51,7 @@ namespace lithe {
             size_t i = lithe::translate_index(entity_size, x, y);
 
             return *static_cast<T*>(
-                static_cast<void*>(buff + (i + origins->at(x)))
+                static_cast<void*>(buff.get() + (i + origins->at(x)))
             );
         }
 
@@ -69,7 +69,7 @@ namespace lithe {
             size_t i = lithe::translate_index(entity_size, x, y);
 
             std::fill_n(
-                buff + (i + origins->at(x)),  // Find start of component.
+                buff.get() + (i + origins->at(x)),  // Find start of component.
                 sizeof(T),
                 0
             );

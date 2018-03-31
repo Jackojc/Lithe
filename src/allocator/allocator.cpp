@@ -27,23 +27,23 @@ namespace lithe {
 
         // Copy A into TMP.
         std::copy(
-            buff + (entity_size * a),
-            buff + (entity_size * a) + entity_size,
+            buff.get() + (entity_size * a),
+            buff.get() + (entity_size * a) + entity_size,
             tmp
         );
 
         // Copy B into A.
         std::copy(
-            buff + (entity_size * b),
-            buff + (entity_size * b) + entity_size,
-            buff + (entity_size * a)
+            buff.get() + (entity_size * b),
+            buff.get() + (entity_size * b) + entity_size,
+            buff.get() + (entity_size * a)
         );
 
         // Copy TMP into B.
         std::copy(
             tmp,
             tmp + entity_size,
-            buff + (entity_size * b)
+            buff.get() + (entity_size * b)
         );
 
         // Delete temporary buffer.

@@ -15,9 +15,9 @@
 namespace lithe {
     // Get the size of each element in a variadic template
     // and put them into an array.
-    template <typename... types>
+    template <typename... Ts>
     inline std::vector<size_t> get_sizes() {
-        return {sizeof(types)...};
+        return {sizeof(Ts)...};
     }
 
 
@@ -63,7 +63,7 @@ namespace lithe {
         lithe::info& info,
         lithe::handler_create handler = &lithe::create_buffer
     ) {
-        info.buffer = handler(info.entity_size, info.num_entities);
+        info.buffer = std::shared_ptr<char>(handler(info.entity_size, info.num_entities));
         return info.buffer;
     }
 

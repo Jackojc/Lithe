@@ -2,6 +2,7 @@
 #define LITHE_INFO_H
 
 
+#include <memory>
 #include <cstddef>
 #include <vector>
 #include "../types.h"

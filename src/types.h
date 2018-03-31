@@ -2,6 +2,8 @@
 #define LITHE_TYPES_H
 
 
+#include <memory>
+#include <set>
 #include <chrono>
 #include <cstdint>
 
@@ -11,8 +13,11 @@ namespace lithe {
     using component_id = uintmax_t;
     using entity_id = uintmax_t;
 
+    using component_ids = std::set<component_id>;
+    using entity_ids = std::set<entity_id>;
+
     // Type alias to make things perhaps a little more clear.
-    using buffer = char*;
+    using buffer = std::shared_ptr<char>;
 
     // Function pointer aliases for handling creation
     // and cleanup of underlying memory for the engine.
@@ -23,6 +28,10 @@ namespace lithe {
     // looks nicer than the standard syntax.
     template <typename T, typename... Ts>
     using fn_ptr = T(*)(Ts...);
+
+
+    // Used for keeping track of living or dead components.
+    using bitmask = std::bitset<LITHE_DEFAULT_COMPONENT_NUM>;
 
 
     // Chrono aliases.

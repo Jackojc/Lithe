@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <bitset>
+#include "../constants.h"
 #include "../types.h"
 #include "../container/container.h"
 
@@ -15,51 +16,30 @@ namespace lithe {
     struct entity {
         const lithe::entity_id uid;
         lithe::container& container;
-        std::bitset<64> component_mask;
 
 
         entity(const lithe::entity_id uid_, lithe::container& container_);
 
 
         // Attach a component.
-        template <typename T>
-        void attach(const T& item) {
-            component_mask[lithe::get_type_uid<T>()] = true;
-            container.attach<T>(uid, item);
-        }
-
-
-        // Convenience wrapper to allow you to attach
-        // multiple components in one call.
-        template<typename T, typename... Ts>
-        void attach(const T& t, const Ts&&... ts) {
-            attach(t);
-            attach<Ts...>(ts...);
+        template <typename... Ts>
+        void attach(const Ts&&... ts) {
+            container.attach<Ts...>(uid, ts...);
         }
 
 
         // Detach a component.
-        template <typename T>
+        template <typename... Ts>
         void detach() {
-            container.detach<T>(uid);
-            component_mask[lithe::get_type_uid<T>()] = false;
+            container.detach<Ts...>(uid);
         }
 
 
-        // Convenience wrapper to allow you to
-        // detach multiple components in one call.
-        template <typename T1, typename T2, typename... Ts>
-        void detach() {
-            detach<T1>(uid);
-            detach<T2, Ts...>(uid);
-        }
-
-
-        // Check if this entity has a certain component.
+        /*// Check if this entity has a certain component.
         template <typename T>
         bool has() const {
             return component_mask[lithe::get_type_uid<T>()];
-        }
+        }*/
 
 
         // Get a reference to a component.
