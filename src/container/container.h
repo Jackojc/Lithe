@@ -10,6 +10,7 @@
 #include "../translate_index.h"
 #include "../allocator/allocator.h"
 #include "../component/component.h"
+#include "../component/defaults.h"
 
 
 namespace lithe {

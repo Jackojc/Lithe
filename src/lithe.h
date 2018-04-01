@@ -14,6 +14,7 @@
 
 #include "allocator/allocator.h"
 #include "component/component.h"
+#include "component/defaults.h"
 #include "container/container.h"
 #include "info/info.h"
 #include "entity/entity.h"

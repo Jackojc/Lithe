@@ -7,7 +7,6 @@
 #include "../uid.h"
 
 
-
 namespace lithe {
     // Uses the CRTP to determine type ids at construction.
 
@@ -36,9 +35,8 @@ namespace lithe {
     #endif
 
 
-    struct metadata: lithe::component<metadata> {
-        lithe::bitmask bits;
-    };
+    template <typename... Ts>
+    struct component_group {};
 }
 
 

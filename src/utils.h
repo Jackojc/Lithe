@@ -15,9 +15,15 @@
 namespace lithe {
     // Get the size of each element in a variadic template
     // and put them into an array.
-    template <typename... Ts>
-    inline std::vector<size_t> get_sizes() {
-        return {sizeof(lithe::metadata), sizeof(Ts)...};
+    template <
+        typename... Ts1, template <typename...> class T1,
+        typename... Ts2, template <typename...> class T2
+    >
+    inline std::vector<size_t> get_sizes(
+        const T1<Ts1...>&,
+        const T2<Ts2...>&
+    ) {
+        return {sizeof(Ts1)..., sizeof(Ts2)...};
     }
 
 
@@ -45,7 +51,10 @@ namespace lithe {
         lithe::info info;
 
         // Information about the components.
-        info.sizes = lithe::get_sizes<Ts...>();
+        info.sizes = lithe::get_sizes(
+            lithe::component_group<LITHE_IMPLICIT_COMPONENTS>{},
+            lithe::component_group<Ts...>{}
+        );
         info.origins = lithe::get_origins(info.sizes);
         info.entity_size = lithe::get_total(info.sizes);
         info.num_entities = num_entities;
