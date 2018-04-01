@@ -2,7 +2,7 @@
 
 
 namespace lithe {
-    entity::entity(const lithe::entity_id uid_, lithe::container& container_):
+    entity::entity(lithe::entity_id uid_, lithe::container& container_):
         uid(uid_),
         container(container_)
     {

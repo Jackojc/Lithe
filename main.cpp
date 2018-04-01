@@ -39,9 +39,7 @@ struct name: lithe::component<name> {
 };
 
 
-struct metadata: lithe::component<metadata> {
 
-};
 
 
 
@@ -175,6 +173,9 @@ int main(int argc, const char* argv[]) {
 
     lithe::entity a(0, container);
     lithe::entity b(1, container);
+
+
+
 
     return 0;
 }

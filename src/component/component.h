@@ -34,6 +34,11 @@ namespace lithe {
             }
         };
     #endif
+
+
+    struct metadata: lithe::component<metadata> {
+        lithe::bitmask bits;
+    };
 }
 
 

@@ -17,7 +17,7 @@ namespace lithe {
     // and put them into an array.
     template <typename... Ts>
     inline std::vector<size_t> get_sizes() {
-        return {sizeof(Ts)...};
+        return {sizeof(lithe::metadata), sizeof(Ts)...};
     }
 
 

@@ -14,11 +14,25 @@ namespace lithe {
     // an ID and implements wrapper functions that call
     // to the container object.
     struct entity {
-        const lithe::entity_id uid;
+        lithe::entity_id uid;
         lithe::container& container;
 
 
         entity(const lithe::entity_id uid_, lithe::container& container_);
+
+
+        // Get a reference to a component.
+        template <typename T>
+        T& get() const {
+            return container.get<T>(uid);
+        }
+
+
+        // Check if this entity has a certain component.
+        template <typename... Ts>
+        bool has() const {
+            return container.has<Ts...>(uid);
+        }
 
 
         // Attach a component.
@@ -32,20 +46,6 @@ namespace lithe {
         template <typename... Ts>
         void detach() {
             container.detach<Ts...>(uid);
-        }
-
-
-        /*// Check if this entity has a certain component.
-        template <typename T>
-        bool has() const {
-            return component_mask[lithe::get_type_uid<T>()];
-        }*/
-
-
-        // Get a reference to a component.
-        template <typename T>
-        T& get() const {
-            return container.get<T>(uid);
         }
 
 

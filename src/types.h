@@ -2,10 +2,12 @@
 #define LITHE_TYPES_H
 
 
+#include <bitset>
 #include <memory>
 #include <set>
 #include <chrono>
 #include <cstdint>
+#include "constants.h"
 
 
 namespace lithe {

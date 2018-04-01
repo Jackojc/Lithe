@@ -71,7 +71,7 @@ namespace lithe {
             std::fill_n(
                 buff.get() + (i + origins->at(x)),  // Find start of component.
                 sizeof(T),
-                0
+                char{0}
             );
         }
 
