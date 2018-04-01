@@ -6,18 +6,20 @@
 #include <numeric>
 #include <cstddef>
 #include "types.h"
+#include "order.h"
 #include "memory.h"
 #include "allocator/allocator.h"
 #include "container/container.h"
 #include "info/info.h"
+#include "world/world.h"
 
 
 namespace lithe {
     // Get the size of each element in a variadic template
     // and put them into an array.
-    template <typename... types>
+    template <typename... Ts>
     inline std::vector<size_t> get_sizes() {
-        return {sizeof(types)...};
+        return {sizeof(Ts)...};
     }
 
 
@@ -41,11 +43,22 @@ namespace lithe {
 
     // Set everything that we need up properly.
     template <typename... Ts>
-    inline lithe::info setup_info(lithe::entity_id num_entities) {
+    inline lithe::info setup_info(
+        const lithe::component_group<Ts...>&,
+        lithe::entity_id num_entities
+    ) {
         lithe::info info;
 
+
+        lithe::order_types<lithe::metadata, Ts...>();
+
+
         // Information about the components.
-        info.sizes = lithe::get_sizes<Ts...>();
+        info.sizes = lithe::get_sizes<
+            lithe::metadata,  // this component is implicitly attached.
+            Ts...
+        >();
+
         info.origins = lithe::get_origins(info.sizes);
         info.entity_size = lithe::get_total(info.sizes);
         info.num_entities = num_entities;
@@ -61,9 +74,13 @@ namespace lithe {
     // It's still up to the user to manually destroy the buffer later.
     inline lithe::buffer& setup_buffer(
         lithe::info& info,
-        lithe::handler_create handler = &lithe::create_buffer
+        lithe::handler_create handler_c = &lithe::create_buffer,
+        lithe::handler_destroy handler_d = &lithe::destroy_buffer
     ) {
-        info.buffer = handler(info.entity_size, info.num_entities);
+        info.buffer = std::shared_ptr<char>(
+            handler_c(info.entity_size, info.num_entities),
+            handler_d
+        );
         return info.buffer;
     }
 
@@ -86,6 +103,17 @@ namespace lithe {
     inline lithe::container& setup_container(lithe::info& info) {
         info.container = lithe::container(&info.allocator);
         return info.container;
+    }
+
+
+    inline lithe::uid_manager& setup_uid_manager(lithe::info& info) {
+        return info.uids;
+    }
+
+
+    inline lithe::world& setup_world(lithe::info& info) {
+        info.world = lithe::world(&info.container, &info.uids);
+        return info.world;
     }
 }
 

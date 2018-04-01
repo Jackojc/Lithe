@@ -10,16 +10,15 @@ namespace lithe {
     // Generic function to profile performance of a function.
     template <
         typename Tunit = std::chrono::seconds,
-        typename T,
-        typename... Ts1,
-        typename... Ts2
+        typename Tfunc,
+        typename... Ts
     >
-    double profile(lithe::fn_ptr<T, Ts1...> func, Ts2&&... args) {
+    double profile(Tfunc func, Ts&&... args) {
         // Take a reading before the function is run.
         auto start = std::chrono::high_resolution_clock::now();
 
         // Run the function and forward the arguments.
-        func(std::forward<Ts2>(args)...);
+        func(std::forward<Ts>(args)...);
 
         // And a reading after it has run.
         auto end = std::chrono::high_resolution_clock::now();
