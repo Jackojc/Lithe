@@ -10,8 +10,6 @@ namespace lithe {
 
     #define LITHE_DEFAULT_COMPONENT_NUM 64
     #define LITHE_DEFAULT_ENTITY_NUM    64
-
-    #define LITHE_IMPLICIT_COMPONENTS lithe::metadata
 }
 
 

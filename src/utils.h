@@ -52,7 +52,7 @@ namespace lithe {
 
         // Information about the components.
         info.sizes = lithe::get_sizes(
-            lithe::component_group<LITHE_IMPLICIT_COMPONENTS>{},
+            lithe::IMPLICIT_COMPONENTS,
             lithe::component_group<Ts...>{}
         );
         info.origins = lithe::get_origins(info.sizes);
