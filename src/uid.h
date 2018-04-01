@@ -2,6 +2,7 @@
 #define LITHE_UID_H
 
 
+#include <vector>
 #include <cstdint>
 #include <type_traits>
 #include "types.h"
@@ -35,6 +36,13 @@ namespace lithe {
     template <typename T>
     lithe::component_id get_type_uid() {
         return get_type_uid_t<std::decay<T>>();
+    }
+
+
+    // Return a container of uids.
+    template <typename... Ts>
+    inline std::vector<lithe::component_id> get_type_uids() {
+        return {lithe::get_type_uid<Ts>()...};
     }
 }
 
