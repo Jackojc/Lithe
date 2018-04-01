@@ -8,6 +8,8 @@
 #include "../types.h"
 #include "../allocator/allocator.h"
 #include "../container/container.h"
+#include "../uid_manager/uid_manager.h"
+#include "../world/world.h"
 
 
 namespace lithe {
@@ -20,9 +22,11 @@ namespace lithe {
         lithe::entity_id    num_entities;
 
         // Keep all core components inside this object.
-        lithe::buffer    buffer;
-        lithe::allocator allocator;
-        lithe::container container;
+        lithe::buffer      buffer;
+        lithe::allocator   allocator;
+        lithe::container   container;
+        lithe::uid_manager uids;
+        lithe::world       world;
 
 
         info();
@@ -32,6 +36,8 @@ namespace lithe {
         lithe::buffer& get_buffer();
         lithe::allocator& get_allocator();
         lithe::container& get_container();
+        lithe::uid_manager& get_uid_manager();
+        lithe::world& get_world();
     };
 }
 
