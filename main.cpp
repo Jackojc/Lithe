@@ -14,7 +14,15 @@
 
 
 
+struct velocity: lithe::component<velocity> {
+    float x, y;
 
+    velocity(float X, float Y):
+        x(X), y(Y)
+    {
+
+    }
+};
 
 
 struct position: lithe::component<position> {
@@ -48,15 +56,39 @@ struct name: lithe::component<name> {
 
 
 
-struct update_positions:
-    lithe::system,
-    lithe::system_tag<position, name>
-{
-    void update(lithe::entity&& entity) override {
-        lithe::metadata& meta = entity.get<lithe::metadata>();
+struct update_positions: lithe::system {
+    update_positions(): lithe::system(
+        lithe::component_group<position, velocity>{}
+    ) {}
 
-        if (lithe::compare_bitmasks(meta.tag, tag))
-            std::cout << "MATCH: " << entity.uid << std::endl;
+
+    void update(lithe::entity&& entity) override {
+        position& p       = entity.get<position>();
+        const velocity& v = entity.get<velocity>();
+
+        p.x += v.x;
+        p.y += v.y;
+
+        std::cout << "Updated position of " << entity.uid << std::endl;
+    }
+};
+
+
+struct print_position_and_name: lithe::system {
+    print_position_and_name(): lithe::system(
+        lithe::component_group<position, name>{}
+    ) {}
+
+
+    void update(lithe::entity&& entity) override {
+        const position& p = entity.get<position>();
+        const name& n     = entity.get<name>();
+
+        std::cout
+            << "Position of "
+            << n.n << ": "
+            << p.x << ", " << p.y
+        << "\n\n";
     }
 };
 
@@ -69,7 +101,7 @@ struct update_positions:
 
 
 const int NUM_ENTITIES = 100;
-lithe::component_group<position, name> COMPONENTS;
+lithe::component_group<velocity, position, name> COMPONENTS;
 
 
 
@@ -82,6 +114,8 @@ int main(int argc, const char* argv[]) {
     auto& buffer    = lithe::setup_buffer(info);
     auto& allocator = lithe::setup_allocator(info);
     auto& container = lithe::setup_container(info);
+    auto& uids      = lithe::setup_uid_manager(info);
+    auto& world     = lithe::setup_world(info);
 
 
     // Error checking.
@@ -91,19 +125,17 @@ int main(int argc, const char* argv[]) {
     }
 
 
-    update_positions pos;
+    auto a = world.create_entity();
 
+    world.create_system<update_positions>();
+    world.create_system<print_position_and_name>();
 
-    lithe::entity a(0, container);
-    lithe::entity b(1, container);
-
-
-    a.attach(position{2, 1});
+    a.attach(position{0, 0});
+    a.attach(velocity{5, 5});
     a.attach(name{"A"});
 
-
-    pos.enroll({0, 1});
-    pos.update_entities(container);
+    for (int i = 0; i < 5; ++i)
+        world.update();
 
 
     return 0;

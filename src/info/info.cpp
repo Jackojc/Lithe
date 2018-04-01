@@ -11,7 +11,9 @@ namespace lithe {
 
         buffer(nullptr),
         allocator(nullptr, nullptr, nullptr, 1),
-        container(nullptr)
+        container(nullptr),
+        uids(),
+        world(nullptr, nullptr)
     {
 
     }
@@ -30,5 +32,15 @@ namespace lithe {
 
     lithe::container& info::get_container() {
         return container;
+    }
+
+
+    lithe::uid_manager& info::get_uid_manager() {
+        return uids;
+    }
+
+
+    lithe::world& info::get_world() {
+        return world;
     }
 }

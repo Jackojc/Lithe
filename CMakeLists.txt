@@ -37,14 +37,18 @@ file(GLOB_RECURSE INFO
 )
 
 
+file(GLOB_RECURSE WORLD
+    "src/world/*.cpp"
+)
+
+
 file(GLOB_RECURSE MISC
     "src/*.cpp"
-    "src/*.h"
 )
 
 
 # EXECUTABLE
-add_executable(${PROJECT_NAME} ${ALLOCATOR} ${CONTAINER} ${ENTITY} ${SCENE_MANAGER} ${SCENE} ${INFO} ${MISC} ${MAIN})
+add_executable(${PROJECT_NAME} ${ALLOCATOR} ${CONTAINER} ${ENTITY} ${SCENE_MANAGER} ${SCENE} ${INFO} ${WORLD} ${MISC} ${MAIN})
 
 
 # FILTERS
@@ -55,6 +59,7 @@ source_group("scene_manager" FILES ${SCENE_MANAGER})
 source_group("scene" FILES ${SCENE})
 source_group("info" FILES ${INFO})
 source_group("misc" FILES ${MISC})
+source_group("world" FILES ${WORLD})
 
 
 # LINK

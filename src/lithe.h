@@ -20,7 +20,6 @@
 #include "info/info.h"
 #include "entity/entity.h"
 #include "system/system.h"
-#include "system/system_tag.h"
 //#include "event_manager/event_manager.h"
 #include "scene_manager/scene_manager.h"
 #include "scene/scene.h"

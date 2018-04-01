@@ -11,6 +11,7 @@
 #include "allocator/allocator.h"
 #include "container/container.h"
 #include "info/info.h"
+#include "world/world.h"
 
 
 namespace lithe {
@@ -73,9 +74,13 @@ namespace lithe {
     // It's still up to the user to manually destroy the buffer later.
     inline lithe::buffer& setup_buffer(
         lithe::info& info,
-        lithe::handler_create handler = &lithe::create_buffer
+        lithe::handler_create handler_c = &lithe::create_buffer,
+        lithe::handler_destroy handler_d = &lithe::destroy_buffer
     ) {
-        info.buffer = std::shared_ptr<char>(handler(info.entity_size, info.num_entities));
+        info.buffer = std::shared_ptr<char>(
+            handler_c(info.entity_size, info.num_entities),
+            handler_d
+        );
         return info.buffer;
     }
 
@@ -101,30 +106,14 @@ namespace lithe {
     }
 
 
-    // See if the system's tag is contained within
-    // an entities tag.
-    bool compare_bitmasks(
-        const lithe::bitmask& entity,
-        const lithe::bitmask& tag
-    ) {
-        return (
-            (entity & tag) == tag
-            && !entity.none()
-        );
+    inline lithe::uid_manager& setup_uid_manager(lithe::info& info) {
+        return info.uids;
     }
 
 
-    // create a bitmask from a container of uids.
-    inline bitmask create_bitmask(
-        const std::vector<lithe::component_id>& uids
-    ) {
-        bitmask bits;
-
-        for (const auto& uid: uids) {
-            bits[uid] = true;
-        }
-
-        return bits;
+    inline lithe::world& setup_world(lithe::info& info) {
+        info.world = lithe::world(&info.container, &info.uids);
+        return info.world;
     }
 }
 
