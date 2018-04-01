@@ -3,10 +3,11 @@
 
 
 #include <array>
+#include "../constants.h"
 
 
 namespace lithe {
-    template <typename T, size_t S>
+    template <typename T, size_t S = LITHE_DEFAULT_STACK_SIZE>
     struct stack {
         std::array<T, S> items_;
         unsigned index_ = 0;

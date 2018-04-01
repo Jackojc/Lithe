@@ -10,6 +10,7 @@
 #include "../translate_index.h"
 #include "../allocator/allocator.h"
 #include "../component/component.h"
+#include "../component/defaults.h"
 
 
 namespace lithe {
@@ -19,6 +20,30 @@ namespace lithe {
 
 
         container(lithe::allocator* alloc_);
+
+
+        // Returns a reference to a component within an entity.
+        template <typename T>
+        T& get(lithe::entity_id entity) const {
+            return alloc->get<T>(lithe::get_type_uid<T>(), entity);
+        }
+
+
+        // Check whether or not a component is attached.
+        template <typename T>
+        bool has(lithe::entity_id entity) const {
+            return get<lithe::metadata>(entity)
+                .tag[lithe::get_type_uid<T>()];
+        }
+
+
+        // Check for existance of multiple components.
+        template<typename T1, typename T2, typename... Ts>
+        bool has(lithe::entity_id entity) {
+            if (!has<T1>(entity))
+                return false;
+            return has<T2, Ts...>(entity);
+        }
 
 
         // Attaches a component to a specified entity.
@@ -45,6 +70,8 @@ namespace lithe {
             #endif
 
             alloc->attach(lithe::get_type_uid<T>(), entity, item);
+            get<lithe::metadata>(entity)
+                .tag[lithe::get_type_uid<T>()] = true;
         }
 
 
@@ -57,16 +84,11 @@ namespace lithe {
         }
 
 
-        // Returns a reference to a component within an entity.
-        template <typename T>
-        T& get(lithe::entity_id entity) const {
-            return alloc->get<T>(lithe::get_type_uid<T>(), entity);
-        }
-
-
         // Detaches a component from an entity.
         template <typename T>
         void detach(lithe::entity_id entity) {
+            get<lithe::metadata>(entity)
+                .tag[lithe::get_type_uid<T>()] = false;
             alloc->detach<T>(lithe::get_type_uid<T>(), entity);
             alloc->zero<T>(lithe::get_type_uid<T>(), entity);
         }
