@@ -49,9 +49,6 @@ struct name: lithe::component<name> {
 
 
 namespace lithe {
-
-
-
     template <typename... Ts>
     inline std::vector<lithe::component_id> get_ids() {
         return {lithe::get_type_uid<Ts>()...};
@@ -156,7 +153,12 @@ const int NUM_ENTITIES = 100;
 
 
 int main(int argc, const char* argv[]) {
-    auto info       = lithe::setup_info<lithe::metadata, position, name>(NUM_ENTITIES);
+    // It's important to include lithe::metadata here.
+    auto info       = lithe::setup_info(
+        lithe::component_group<position, name>{},
+        NUM_ENTITIES
+    );
+
     auto &buffer    = lithe::setup_buffer(info);
     auto &allocator = lithe::setup_allocator(info);
     auto &container = lithe::setup_container(info);
