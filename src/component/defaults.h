@@ -10,9 +10,6 @@ namespace lithe {
     struct metadata: lithe::component<metadata> {
         lithe::bitmask bits;
     };
-
-
-    static lithe::component_group<lithe::metadata> IMPLICIT_COMPONENTS;
 }
 
 

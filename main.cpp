@@ -18,9 +18,9 @@
 
 
 struct position: lithe::component<position> {
-    unsigned long long x, y;
+    float x, y;
 
-    position(unsigned long long X, unsigned long long Y):
+    position(float X, float Y):
         x(X), y(Y)
     {
 
@@ -152,11 +152,11 @@ struct update_positions:
 
 
 
-
+const int NUM_ENTITIES = 100;
 
 
 int main(int argc, const char* argv[]) {
-    auto info       = lithe::setup_info<position, name>(100);
+    auto info       = lithe::setup_info<lithe::metadata, position, name>(NUM_ENTITIES);
     auto &buffer    = lithe::setup_buffer(info);
     auto &allocator = lithe::setup_allocator(info);
     auto &container = lithe::setup_container(info);
@@ -169,12 +169,20 @@ int main(int argc, const char* argv[]) {
     }
 
 
-    update_positions pos;
+    for (float i = 0; i < NUM_ENTITIES; ++i) {
+        container.attach(i, position{i, i}, name{"Hello"});
+    }
 
-    lithe::entity a(0, container);
-    lithe::entity b(1, container);
+
+    for (float i = 0; i < NUM_ENTITIES; ++i) {
+        if (!container.has<position, name>(i))
+            std::cout << "NOPE\n";
+    }
 
 
+    for (float i = 0; i < NUM_ENTITIES; ++i) {
+        container.detach<position, name>(i);
+    }
 
 
     return 0;

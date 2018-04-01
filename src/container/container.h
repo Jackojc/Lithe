@@ -38,11 +38,11 @@ namespace lithe {
 
 
         // Check for existance of multiple components.
-        template<typename T, typename... Ts>
+        template<typename T1, typename T2, typename... Ts>
         bool has(lithe::entity_id entity) {
-            if (!has<T>(entity))
+            if (!has<T1>(entity))
                 return false;
-            return has<Ts...>(entity);
+            return has<T2, Ts...>(entity);
         }
 
 
