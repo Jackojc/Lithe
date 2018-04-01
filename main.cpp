@@ -48,96 +48,15 @@ struct name: lithe::component<name> {
 
 
 
-namespace lithe {
-    template <typename... Ts>
-    inline std::vector<lithe::component_id> get_ids() {
-        return {lithe::get_type_uid<Ts>()...};
-    }
-
-
-    inline bitmask create_bitmask(
-        const std::vector<lithe::component_id>& uids
-    ) {
-        bitmask bits;
-
-        for (const auto& uid: uids) {
-            bits[uid] = true;
-        }
-
-        return bits;
-    }
-
-
-    template <typename... Ts>
-    struct system_tag {
-        lithe::bitmask bits;
-
-        system_tag():
-            bits(create_bitmask(get_ids<Ts...>()))
-        {
-
-        }
-    };
-
-
-    template <typename T>
-    struct system {
-        std::set<lithe::entity_id> entities;
-
-
-        system() {
-
-        }
-
-        virtual ~system() {}
-
-
-        void update() {
-            std::cerr << "Hello from the system side.\n";
-            for (const auto& entity: entities)
-                static_cast<T*>(this)->update(entity);
-        }
-
-
-        void enroll(lithe::entity_id entity) {
-            entities.emplace(entity);
-        }
-
-
-        void enroll(const lithe::entity_ids& ids) {
-            entities.insert(ids.begin(), ids.end());
-        }
-
-
-        void expel(lithe::entity_id entity) {
-            entities.erase(
-                std::remove(entities.begin(), entities.end(), entity),
-                entities.end()
-            );
-        }
-
-
-        void expel(const lithe::entity_ids& ids) {
-            entities.erase(
-                std::remove_if(
-                    entities.begin(),
-                    entities.end(),
-                    [&](lithe::entity_id entity){
-                        return ids.find(entity) != ids.end();
-                    }),
-                entities.end()
-            );
-        }
-    };
-}
-
-
 struct update_positions:
-    lithe::system<update_positions>,
+    lithe::system,
     lithe::system_tag<position, name>
 {
-    void update(lithe::entity_id entity) {
-        std::cerr << "Hello from the update side: " << entity << "\n";
+    void update(lithe::entity&& entity) override {
+        lithe::metadata& meta = entity.get<lithe::metadata>();
+
+        if (lithe::compare_bitmasks(meta.tag, tag))
+            std::cout << "MATCH: " << entity.uid << std::endl;
     }
 };
 
@@ -150,18 +69,19 @@ struct update_positions:
 
 
 const int NUM_ENTITIES = 100;
+lithe::component_group<position, name> COMPONENTS;
+
 
 
 int main(int argc, const char* argv[]) {
-    // It's important to include lithe::metadata here.
     auto info       = lithe::setup_info(
-        lithe::component_group<position, name>{},
+        COMPONENTS,
         NUM_ENTITIES
     );
 
-    auto &buffer    = lithe::setup_buffer(info);
-    auto &allocator = lithe::setup_allocator(info);
-    auto &container = lithe::setup_container(info);
+    auto& buffer    = lithe::setup_buffer(info);
+    auto& allocator = lithe::setup_allocator(info);
+    auto& container = lithe::setup_container(info);
 
 
     // Error checking.
@@ -171,20 +91,19 @@ int main(int argc, const char* argv[]) {
     }
 
 
-    for (float i = 0; i < NUM_ENTITIES; ++i) {
-        container.attach(i, position{i, i}, name{"Hello"});
-    }
+    update_positions pos;
 
 
-    for (float i = 0; i < NUM_ENTITIES; ++i) {
-        if (!container.has<position, name>(i))
-            std::cout << "NOPE\n";
-    }
+    lithe::entity a(0, container);
+    lithe::entity b(1, container);
 
 
-    for (float i = 0; i < NUM_ENTITIES; ++i) {
-        container.detach<position, name>(i);
-    }
+    a.attach(position{2, 1});
+    a.attach(name{"A"});
+
+
+    pos.enroll({0, 1});
+    pos.update_entities(container);
 
 
     return 0;

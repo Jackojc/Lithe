@@ -18,7 +18,7 @@ namespace lithe {
         lithe::container& container;
 
 
-        entity(const lithe::entity_id uid_, lithe::container& container_);
+        entity(lithe::entity_id uid_, lithe::container& container_);
 
 
         // Get a reference to a component.

@@ -8,7 +8,7 @@
 
 namespace lithe {
     struct metadata: lithe::component<metadata> {
-        lithe::bitmask bits;
+        lithe::bitmask tag;
     };
 }
 

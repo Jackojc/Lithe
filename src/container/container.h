@@ -33,7 +33,7 @@ namespace lithe {
         template <typename T>
         bool has(lithe::entity_id entity) const {
             return get<lithe::metadata>(entity)
-                .bits[lithe::get_type_uid<T>()];
+                .tag[lithe::get_type_uid<T>()];
         }
 
 
@@ -71,7 +71,7 @@ namespace lithe {
 
             alloc->attach(lithe::get_type_uid<T>(), entity, item);
             get<lithe::metadata>(entity)
-                .bits[lithe::get_type_uid<T>()] = true;
+                .tag[lithe::get_type_uid<T>()] = true;
         }
 
 
@@ -88,7 +88,7 @@ namespace lithe {
         template <typename T>
         void detach(lithe::entity_id entity) {
             get<lithe::metadata>(entity)
-                .bits[lithe::get_type_uid<T>()] = false;
+                .tag[lithe::get_type_uid<T>()] = false;
             alloc->detach<T>(lithe::get_type_uid<T>(), entity);
             alloc->zero<T>(lithe::get_type_uid<T>(), entity);
         }

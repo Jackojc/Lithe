@@ -6,6 +6,7 @@
 #include <numeric>
 #include <cstddef>
 #include "types.h"
+#include "order.h"
 #include "memory.h"
 #include "allocator/allocator.h"
 #include "container/container.h"
@@ -46,6 +47,10 @@ namespace lithe {
         lithe::entity_id num_entities
     ) {
         lithe::info info;
+
+
+        lithe::order_types<lithe::metadata, Ts...>();
+
 
         // Information about the components.
         info.sizes = lithe::get_sizes<
@@ -93,6 +98,33 @@ namespace lithe {
     inline lithe::container& setup_container(lithe::info& info) {
         info.container = lithe::container(&info.allocator);
         return info.container;
+    }
+
+
+    // See if the system's tag is contained within
+    // an entities tag.
+    bool compare_bitmasks(
+        const lithe::bitmask& entity,
+        const lithe::bitmask& tag
+    ) {
+        return (
+            (entity & tag) == tag
+            && !entity.none()
+        );
+    }
+
+
+    // create a bitmask from a container of uids.
+    inline bitmask create_bitmask(
+        const std::vector<lithe::component_id>& uids
+    ) {
+        bitmask bits;
+
+        for (const auto& uid: uids) {
+            bits[uid] = true;
+        }
+
+        return bits;
     }
 }
 
