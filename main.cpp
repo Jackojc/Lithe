@@ -136,7 +136,7 @@ int main(int argc, const char* argv[]) {
     a.attach(name{"Batman"});
 
 
-    a.swap(b);
+    a.swap_component<name>(b);
 
 
     // Update the world a few times.

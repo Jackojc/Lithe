@@ -107,7 +107,7 @@ namespace lithe {
         template <typename T>
         void swap_component(lithe::entity_id a, lithe::entity_id b) {
             lithe::component_id tmp = lithe::get_component_uid<T>();
-            swap_component<T>(tmp, a, tmp, b);
+            lithe::allocator::swap_component<T>(tmp, a, tmp, b);
         }
 
 
