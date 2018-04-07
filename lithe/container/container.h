@@ -105,15 +105,16 @@ namespace lithe {
 
         // Swap a single component between two entities.
         template <typename T>
-        void swap_component(lithe::entity_id a, lithe::entity_id b) {
+        void swap(lithe::entity_id a, lithe::entity_id b) {
             lithe::component_id tmp = lithe::get_component_uid<T>();
-            lithe::allocator::swap_component<T>(tmp, a, tmp, b);
+            lithe::allocator::swap<T>(tmp, a, tmp, b);
         }
 
 
-        // Swap two entities. (and their components.)
+        template <typename T1, typename T2, typename... Ts>
         void swap(lithe::entity_id a, lithe::entity_id b) {
-            lithe::allocator::swap(a, b);
+            swap<T1>(a, b);
+            swap<T2, Ts...>(a, b);
         }
     };
 }

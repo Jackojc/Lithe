@@ -54,15 +54,9 @@ namespace lithe {
 
 
         // Swap a component with another entity.
-        template <typename T>
-        void swap_component(const lithe::entity& other) {
-            container.swap_component<T>(uid, other.uid);
-        }
-
-
-        // Swap all the components of this entity with another entity.
+        template <typename... Ts>
         void swap(const lithe::entity& other) {
-            container.swap(uid, other.uid);
+            container.swap<Ts...>(uid, other.uid);
         }
     };
 }

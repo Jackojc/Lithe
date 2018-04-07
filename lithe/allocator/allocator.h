@@ -73,7 +73,7 @@ namespace lithe {
 
         // Swap a single component between two entities.
         template <typename T>
-        void swap_component(
+        void swap(
             lithe::component_id x1,
             lithe::entity_id y1,
 
@@ -81,19 +81,6 @@ namespace lithe {
             lithe::entity_id y2
         ) {
             std::swap(get<T>(x1, y1), get<T>(x2, y2));
-        }
-
-
-        // Swap two entities. (and their components.)
-        void swap(
-            lithe::entity_id a,
-            lithe::entity_id b
-        ) {
-            std::swap_ranges(
-                buff.get() + (info.entity_size * a),
-                buff.get() + (info.entity_size * a) + info.entity_size,
-                buff.get() + (info.entity_size * b)
-            );
         }
     };
 }

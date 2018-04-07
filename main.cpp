@@ -135,15 +135,17 @@ int main(int argc, const char* argv[]) {
     a.attach(velocity{2, 2});
     a.attach(name{"Batman"});
 
+    b.attach(name{"Joker"});
+    b.attach(position{45, 45});
 
-    a.swap_component<name>(b);
+
+    a.swap<name, position>(b);
 
 
     // Update the world a few times.
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 3; ++i) {
         world.update();
     }
-
 
 
     return 0;
