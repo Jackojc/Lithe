@@ -36,12 +36,9 @@ struct name: lithe::component {
 
 
 // SYSTEMS
-struct update_positions: lithe::system {
-    update_positions(): lithe::system(
-        lithe::component_group<position, velocity>{}
-    ) {}
-
-
+struct update_positions:
+    lithe::system<position, velocity>
+{
     void update(lithe::entity&& entity) override {
         position& p       = entity.get<position>();
         const velocity& v = entity.get<velocity>();
@@ -54,12 +51,9 @@ struct update_positions: lithe::system {
 };
 
 
-struct print_position_and_name: lithe::system {
-    print_position_and_name(): lithe::system(
-        lithe::component_group<position, name>{}
-    ) {}
-
-
+struct print_position_and_name:
+    lithe::system<position, name>
+{
     void update(lithe::entity&& entity) override {
         const position& p = entity.get<position>();
         const name& n     = entity.get<name>();

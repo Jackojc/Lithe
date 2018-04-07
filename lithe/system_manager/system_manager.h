@@ -18,7 +18,7 @@
 namespace lithe {
     struct system_manager {
         std::array<
-            std::unique_ptr<lithe::system>,
+            std::unique_ptr<lithe::system_base>,
             LITHE_DEFAULT_SYSTEM_NUM
         > systems;
 
@@ -65,7 +65,7 @@ namespace lithe {
             const lithe::entity_ids& entities,
             lithe::container& container
         ) {
-            std::vector<lithe::system*> active_systems;
+            std::vector<lithe::system_base*> active_systems;
 
             // We just want an array of active systems.
             for (int i = 0; i < LITHE_DEFAULT_SYSTEM_NUM; ++i) {

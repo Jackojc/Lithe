@@ -9,25 +9,42 @@
 
 
 namespace lithe {
-    struct system {
-        lithe::bitmask tag;
+    struct system_base {
+        // Tag used to identify which components a system accepts.
+        const lithe::bitmask tag;
 
-        // Assign a tag to the system
-        // so we know what components
-        // it operates on.
-        template <typename... Ts>
-        system(const lithe::component_group<Ts...>&):
-            tag(lithe::create_bitmask(lithe::get_component_uids<Ts...>()))
+
+        // Constructor that initialises a tag.
+        system_base(const lithe::bitmask& tag_):
+            tag(tag_)
         {
 
         }
 
-        virtual ~system() {}
 
+        virtual ~system_base() {}
 
         // Member function that is
         // overridden by the user.
         virtual void update(lithe::entity&& entity) = 0;
+    };
+
+
+    template <typename... Ts>
+    struct system: lithe::system_base {
+        // Assign a tag to the system
+        // so we know what components
+        // it operates on.
+        system():
+            lithe::system_base(
+                lithe::create_bitmask(lithe::get_component_uids<Ts...>())
+            )
+        {
+
+        }
+
+
+        virtual ~system() {}
     };
 }
 
