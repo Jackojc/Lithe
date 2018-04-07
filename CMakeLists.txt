@@ -7,70 +7,21 @@ project(${PROJECT_NAME})
 set(MAIN main.cpp)
 
 
-file(GLOB_RECURSE ALLOCATOR
-    "src/allocator/*.cpp"
-)
-
-
-file(GLOB_RECURSE CONTAINER
-    "src/container/*.cpp"
-)
-
-
-file(GLOB_RECURSE ENTITY
-    "src/entity/*.cpp"
-)
-
-
-file(GLOB_RECURSE SCENE_MANAGER
-    "src/scene_manager/*.cpp"
-)
-
-
-file(GLOB_RECURSE SCENE
-    "src/scene/*.cpp"
-)
-
-
-file(GLOB_RECURSE INFO
-    "src/info/*.cpp"
-)
-
-
-file(GLOB_RECURSE WORLD
-    "src/world/*.cpp"
-)
-
-
-file(GLOB_RECURSE MISC
-    "src/*.cpp"
-)
-
 
 # EXECUTABLE
-add_executable(${PROJECT_NAME} ${ALLOCATOR} ${CONTAINER} ${ENTITY} ${SCENE_MANAGER} ${SCENE} ${INFO} ${WORLD} ${MISC} ${MAIN})
-
-
-# FILTERS
-source_group("allocator" FILES ${ALLOCATOR})
-source_group("container" FILES ${CONTAINER})
-source_group("entity" FILES ${ENTITY})
-source_group("scene_manager" FILES ${SCENE_MANAGER})
-source_group("scene" FILES ${SCENE})
-source_group("info" FILES ${INFO})
-source_group("misc" FILES ${MISC})
-source_group("world" FILES ${WORLD})
-
-
-# LINK
-#target_link_libraries(${PROJECT_NAME})
+add_executable(
+    ${PROJECT_NAME}
+    ${MAIN}
+)
 
 
 # GCC
 if(CMAKE_COMPILER_IS_GNUCXX)
     set(WARNINGS_AND_ERRORS "-Wall -Wextra -Wfatal-errors -Wshadow -Wunreachable-code -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wold-style-cast -Wuseless-cast -Wdouble-promotion -Wformat=2")
+
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WARNINGS_AND_ERRORS} -Ofast -flto -m64")
 endif(CMAKE_COMPILER_IS_GNUCXX)
+
 
 #MSVC
 if(MSVC)

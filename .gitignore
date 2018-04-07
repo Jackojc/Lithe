@@ -33,6 +33,7 @@
 
 # Directories
 build/
+old/
 
 # Files
 test.cpp
