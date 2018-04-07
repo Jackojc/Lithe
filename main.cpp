@@ -1,49 +1,29 @@
 #include <iostream>
-#include <chrono>
-#include <algorithm>
-#include <cstdint>
-#include <vector>
-#include <string>
-#include <bitset>
-#include <map>
-#include <set>
-#include "src/lithe.h"
+#include "lithe/lithe.h"
 
 
 
 
 
 
-struct velocity: lithe::component<velocity> {
+
+
+// COMPONENTS
+struct velocity: lithe::component {
     float x, y;
-
-    velocity(float X, float Y):
-        x(X), y(Y)
-    {
-
-    }
+    velocity(float X, float Y): x(X), y(Y) {}
 };
 
 
-struct position: lithe::component<position> {
+struct position: lithe::component {
     float x, y;
-
-    position(float X, float Y):
-        x(X), y(Y)
-    {
-
-    }
+    position(float X, float Y): x(X), y(Y) {}
 };
 
 
-struct name: lithe::component<name> {
+struct name: lithe::component {
     std::string n;
-
-    name(const std::string& N):
-        n(N)
-    {
-
-    }
+    name(const std::string& N): n(N) {}
 };
 
 
@@ -55,7 +35,7 @@ struct name: lithe::component<name> {
 
 
 
-
+// SYSTEMS
 struct update_positions: lithe::system {
     update_positions(): lithe::system(
         lithe::component_group<position, velocity>{}
@@ -100,42 +80,70 @@ struct print_position_and_name: lithe::system {
 
 
 
-const int NUM_ENTITIES = 100;
-lithe::component_group<velocity, position, name> COMPONENTS;
+
+
+
+
+
+// CONSTANTS
+auto NUM_ENTITIES = 2;
+auto COMPONENTS = lithe::component_group<name, velocity, position>{};
+
+
+
+
+
+
+
+
+
+
 
 
 
 int main(int argc, const char* argv[]) {
-    auto info       = lithe::setup_info(
+    auto info = lithe::info(
+        NUM_ENTITIES,
         COMPONENTS,
-        NUM_ENTITIES
+        lithe::get_implicit_components()
     );
 
-    auto& buffer    = lithe::setup_buffer(info);
-    auto& allocator = lithe::setup_allocator(info);
-    auto& container = lithe::setup_container(info);
-    auto& uids      = lithe::setup_uid_manager(info);
-    auto& world     = lithe::setup_world(info);
+
+    auto buffer    = lithe::create_buffer(info);
+    auto core      = lithe::create_core(buffer, info);
+    auto world     = lithe::create_world(core);
 
 
     // Error checking.
-    if (info.buffer == nullptr) {
+    if (buffer == nullptr) {
         std::cerr << "Could not allocate enough memory to process!\n";
         return -1;
     }
 
 
-    auto a = world.create_entity();
+    // Setup systems to use.
+    world.attach<update_positions>();
+    world.attach<print_position_and_name>();
 
-    world.create_system<update_positions>();
-    world.create_system<print_position_and_name>();
+
+    // Create an entity and attach components.
+    auto a = world.create();
+    auto b = world.create();
+
 
     a.attach(position{0, 0});
-    a.attach(velocity{5, 5});
-    a.attach(name{"A"});
+    a.attach(velocity{2, 2});
+    a.attach(name{"Batman"});
 
-    for (int i = 0; i < 5; ++i)
+
+    a.swap(b);
+
+
+    // Update the world a few times.
+    for (int i = 0; i < 10; ++i) {
         world.update();
+    }
+
 
 
     return 0;
