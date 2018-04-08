@@ -19,7 +19,7 @@ namespace lithe {
             const lithe::info& info_
         ):
             info(info_),
-            uids(),
+            uids(info_),
             container(buff, info_)
         {
 

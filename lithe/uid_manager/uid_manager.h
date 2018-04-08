@@ -2,6 +2,7 @@
 #define LITHE_UID_MANAGER_H
 
 
+#include <stdexcept>
 #include <cstddef>
 #include <vector>
 #include "../constants.h"
@@ -10,11 +11,22 @@
 
 
 namespace lithe {
-    template <size_t S>
-    struct uid_manager_base {
+    struct uid_manager {
+        const lithe::info& info;
         lithe::entity_id current;
-        lithe::stack<lithe::entity_id, S> unused;
+        lithe::stack<lithe::entity_id> unused;
         bool any_unused;
+
+
+        uid_manager(
+            const lithe::info& info_,
+            size_t size = LITHE_DEFAULT_ENTITY_NUM
+        ):
+            info(info_),
+            unused(size)
+        {
+
+        }
 
 
         // Withdraw a unique ID.
@@ -26,8 +38,13 @@ namespace lithe {
 
                 auto tmp = unused.top();
                 unused.pop();
-                return std::move(tmp);
+                return tmp;
             }
+
+            if (current + 1 > info.num_entities)
+                throw std::runtime_error(
+                    "Requested a UID larger than the maximum number of entities."
+                );
 
             // If not, lets make a new ID.
             return current++;
@@ -49,11 +66,11 @@ namespace lithe {
 
 
         // Withdraw many IDs at once.
-        std::vector<lithe::entity_id> withdraw(unsigned num) {
-            std::vector<lithe::entity_id> uids;
+        lithe::entity_ids withdraw(unsigned num) {
+            lithe::entity_ids uids;
 
             for (unsigned i = 0; i < num; ++i) {
-                uids.push_back(withdraw());
+                uids.insert(withdraw());
             }
 
             return uids;
@@ -61,15 +78,12 @@ namespace lithe {
 
 
         // Deposit many IDs at once.
-        void deposit(std::vector<lithe::entity_id>&& uids) {
+        void deposit(const lithe::entity_ids& uids) {
             for (auto uid: uids) {
                 deposit(uid);
             }
         }
     };
-
-
-    using uid_manager = uid_manager_base<LITHE_DEFAULT_ENTITY_NUM>;
 }
 
 

@@ -2,6 +2,7 @@
 #define LITHE_WORLD_H
 
 
+#include "../info/info.h"
 #include "../container/container.h"
 #include "../uid_manager/uid_manager.h"
 #include "../system_manager/system_manager.h"
@@ -14,10 +15,10 @@ namespace lithe {
         lithe::entity_manager
     {
         world(
-            lithe::container& container_,
-            lithe::uid_manager& uids_
+            const lithe::info& info_,
+            lithe::container& container_
         ):
-            lithe::entity_manager(uids_, container_)
+            lithe::entity_manager(info_, container_)
         {
 
         }

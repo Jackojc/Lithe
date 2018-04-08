@@ -3,6 +3,7 @@
 
 
 #include "../types.h"
+#include "../info/info.h"
 #include "../uid_manager/uid_manager.h"
 #include "../container/container.h"
 #include "../entity/entity.h"
@@ -11,17 +12,16 @@
 namespace lithe {
     // Class that handles creation and
     // destruction of entity objects.
-    struct entity_manager {
+    struct entity_manager: lithe::uid_manager {
         lithe::entity_ids entities;
-        lithe::uid_manager& uids;
         lithe::container& container;
 
 
         entity_manager(
-            lithe::uid_manager& uids_,
+            const lithe::info& info_,
             lithe::container& container_
         ):
-            uids(uids_),
+            lithe::uid_manager(info_),
             container(container_)
         {
 
@@ -32,7 +32,7 @@ namespace lithe {
         // assign it to an entity object
         // and return it.
         lithe::entity create() {
-            lithe::entity_id entity = uids.withdraw();
+            lithe::entity_id entity = withdraw();
             entities.insert(entity);
             return {entity, container};
         }
@@ -41,6 +41,7 @@ namespace lithe {
         // Destroy an entity ID.
         void destroy(const lithe::entity& entity) {
             entities.erase(entity.uid);
+            deposit(entity.uid);
         }
     };
 }

@@ -2,61 +2,70 @@
 #define LITHE_STACK_H
 
 
-#include <array>
+#include <vector>
 #include "../constants.h"
 
 
 namespace lithe {
-    template <typename T, size_t S = LITHE_DEFAULT_STACK_SIZE>
+    template <typename T>
     struct stack {
-        std::array<T, S> items_;
-        unsigned index_ = 0;
+        std::vector<T> items;
+
+
+        stack() {
+            items.reserve(LITHE_DEFAULT_STACK_SIZE);
+        }
+
+
+        stack(size_t size) {
+            items.reserve(size);
+        }
 
 
         // Push an object to the stack.
         void push(const T& value) {
-            items_[index_++] = value;
+            items.emplace_back(value);
         }
 
 
         void push(T&& value) {
-            items_[index_++] = std::move(value);
+            items.emplace_back(std::move(value));
         }
 
 
         // Pop an object from the stack.
         void pop() {
-            items_[--index_];
+            items.pop_back();
         }
 
 
         // Peek at any index in the stack.
         T& peek(const unsigned index) {
-            return items_[index];
+            return items.at(index);
         }
 
 
         // Peek the top index of the stack.
         T& top() {
-            return items_[index_ - 1];
+            return items.back();
         }
 
 
         // Invalidate all items in the stack.
         void clear() {
-            index_ = 0;
+            items.clear();
         }
 
 
         // Get the numbers of items in the stack.
         size_t size() const {
-            return index_;
+            return items.size();
         }
 
 
         // Check whether stack is empty or not.
         bool empty() const {
-            return size() == 0;
+            return items.empty();
         }
     };
 }

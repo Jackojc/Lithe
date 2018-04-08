@@ -11,10 +11,15 @@
 
 
 namespace lithe {
-    // Max number of scenes (S).
-    template <size_t S>
-    struct scene_manager_base {
-        lithe::stack<std::unique_ptr<lithe::scene>, S> scenes;
+    struct scene_manager {
+        lithe::stack<std::unique_ptr<lithe::scene>> scenes;
+
+
+        scene_manager(size_t size = LITHE_DEFAULT_SCENE_NUM):
+            scenes(size)
+        {
+
+        }
 
 
         // Get the current scene.
@@ -56,9 +61,6 @@ namespace lithe {
                 get().update_all();
         }
     };
-
-
-    using scene_manager = scene_manager_base<LITHE_DEFAULT_SCENE_NUM>;
 }
 
 

@@ -20,7 +20,7 @@ namespace lithe {
 
     // Set everything that we need up properly.
     inline lithe::world create_world(lithe::core& core) {
-        return {core.container, core.uids};
+        return {core.info, core.container};
     }
 }
 
