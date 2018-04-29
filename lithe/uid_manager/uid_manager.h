@@ -23,7 +23,9 @@ namespace lithe {
             size_t size = LITHE_DEFAULT_ENTITY_NUM
         ):
             info(info_),
-            unused(size)
+            current(0),
+            unused(size),
+            any_unused(false)
         {
 
         }
